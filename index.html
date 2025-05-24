@@ -107,13 +107,14 @@
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             border-radius: 50px;
-            padding: 8px;
+            padding: 8px 16px;
             cursor: pointer;
             transition: all 0.3s var(--ease-smooth);
             backdrop-filter: var(--glass-blur);
             display: flex;
             align-items: center;
             gap: 8px;
+            color: var(--text-secondary);
         }
 
         .theme-toggle:hover {
@@ -153,25 +154,6 @@
             overflow: hidden;
         }
 
-        .mode-btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: var(--primary-gradient);
-            border-radius: 50%;
-            transition: all 0.4s var(--ease-smooth);
-            transform: translate(-50%, -50%);
-            z-index: -1;
-        }
-
-        .mode-btn:hover::before {
-            width: 200%;
-            height: 200%;
-        }
-
         .mode-btn.active {
             background: var(--primary-gradient);
             color: white;
@@ -182,7 +164,6 @@
         .mode-btn:hover {
             transform: translateY(-3px);
             box-shadow: var(--shadow-medium);
-            color: white;
         }
 
         /* App Title with Animation */
@@ -230,29 +211,6 @@
             transition: all 0.4s var(--ease-smooth);
         }
 
-        .glass-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transform: rotate(45deg);
-            transition: all 0.6s var(--ease-smooth);
-            opacity: 0;
-        }
-
-        .glass-card:hover::before {
-            animation: shimmer 1.5s ease-in-out;
-        }
-
-        @keyframes shimmer {
-            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); opacity: 0; }
-            50% { opacity: 1; }
-            100% { transform: translateX(100%) translateY(100%) rotate(45deg); opacity: 0; }
-        }
-
         .glass-card:hover {
             transform: translateY(-5px);
             box-shadow: var(--shadow-strong), var(--shadow-glow);
@@ -269,24 +227,6 @@
             font-size: 1.4em;
             font-weight: 700;
             box-shadow: var(--shadow-medium);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .section-header::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            animation: sweep 3s ease-in-out infinite;
-        }
-
-        @keyframes sweep {
-            0% { left: -100%; }
-            100% { left: 100%; }
         }
 
         /* Enhanced Task Cards */
@@ -299,28 +239,10 @@
             transition: all 0.3s var(--ease-smooth);
             position: relative;
             overflow: hidden;
-            transform-style: preserve-3d;
-        }
-
-        .task-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--primary-gradient);
-            transform: scaleX(0);
-            transition: transform 0.3s var(--ease-smooth);
-            transform-origin: left;
-        }
-
-        .task-card:hover::before {
-            transform: scaleX(1);
         }
 
         .task-card:hover {
-            transform: translateY(-3px) translateZ(10px);
+            transform: translateY(-3px);
             box-shadow: var(--shadow-medium);
             border-color: rgba(102, 126, 234, 0.3);
         }
@@ -363,7 +285,76 @@
             filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
         }
 
-        /* Animated Progress Indicators */
+        /* Day Checkboxes with Enhanced Design */
+        .day-checkboxes {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .day-checkbox {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+            border-radius: 12px;
+            transition: all 0.3s var(--ease-smooth);
+            cursor: pointer;
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            min-width: 60px;
+        }
+
+        .day-checkbox:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .day-checkbox.completed {
+            background: rgba(17, 153, 142, 0.2);
+            border-color: rgba(17, 153, 142, 0.4);
+        }
+
+        .day-label {
+            font-size: 0.8em;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--text-secondary);
+        }
+
+        .checkbox {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            appearance: none;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--surface-secondary);
+            transition: all 0.3s var(--ease-bounce);
+            position: relative;
+        }
+
+        .checkbox:checked {
+            background: var(--success-gradient);
+            border-color: transparent;
+            transform: scale(1.1);
+        }
+
+        .checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        /* Progress Indicators */
         .progress-container {
             margin-top: 15px;
             padding: 15px;
@@ -398,7 +389,6 @@
             background: rgba(0, 0, 0, 0.1);
             border-radius: 10px;
             overflow: hidden;
-            position: relative;
         }
 
         .progress-fill {
@@ -406,158 +396,9 @@
             background: var(--success-gradient);
             border-radius: 10px;
             transition: width 0.6s var(--ease-smooth);
-            position: relative;
         }
 
-        .progress-fill::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-            animation: progressShine 2s ease-in-out infinite;
-        }
-
-        @keyframes progressShine {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-
-        /* Day Checkboxes with Enhanced Design */
-        .day-checkboxes {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-top: 15px;
-        }
-
-        .day-checkbox {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 10px;
-            border-radius: 12px;
-            transition: all 0.3s var(--ease-smooth);
-            cursor: pointer;
-            background: var(--glass-bg);
-            backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--glass-border);
-            min-width: 60px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .day-checkbox::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: var(--success-gradient);
-            opacity: 0;
-            transition: all 0.3s var(--ease-smooth);
-            border-radius: 12px;
-        }
-
-        .day-checkbox.completed::before {
-            opacity: 0.2;
-        }
-
-        .day-checkbox:hover {
-            transform: translateY(-2px) scale(1.05);
-            box-shadow: var(--shadow-medium);
-        }
-
-        .day-label {
-            font-size: 0.8em;
-            font-weight: 700;
-            margin-bottom: 6px;
-            color: var(--text-secondary);
-            z-index: 1;
-            position: relative;
-        }
-
-        .checkbox {
-            width: 24px;
-            height: 24px;
-            cursor: pointer;
-            appearance: none;
-            border: 2px solid var(--border-color);
-            border-radius: 6px;
-            background: var(--surface-secondary);
-            transition: all 0.3s var(--ease-bounce);
-            position: relative;
-            z-index: 1;
-        }
-
-        .checkbox:checked {
-            background: var(--success-gradient);
-            border-color: transparent;
-            transform: scale(1.1);
-        }
-
-        .checkbox:checked::after {
-            content: '✓';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-weight: bold;
-            font-size: 14px;
-        }
-
-        /* Achievement Celebration */
-        .achievement-celebration {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: var(--glass-bg);
-            backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 30px;
-            text-align: center;
-            box-shadow: var(--shadow-strong);
-            z-index: 1000;
-            opacity: 0;
-            transform: translate(-50%, -50%) scale(0.8);
-            transition: all 0.4s var(--ease-bounce);
-        }
-
-        .achievement-celebration.show {
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
-        }
-
-        .achievement-emoji {
-            font-size: 4em;
-            animation: bounce 0.6s var(--ease-bounce);
-        }
-
-        @keyframes bounce {
-            0%, 20%, 53%, 80%, 100% { transform: translateY(0); }
-            40%, 43% { transform: translateY(-20px); }
-            70% { transform: translateY(-10px); }
-            90% { transform: translateY(-4px); }
-        }
-
-        /* Admin Panel Enhancements */
-        .admin-panel {
-            background: var(--glass-bg);
-            backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: var(--glass-shadow);
-        }
-
+        /* Admin Panel */
         .form-input, .form-select {
             background: var(--surface-primary);
             border: 1px solid var(--border-color);
@@ -567,6 +408,8 @@
             font-size: 1em;
             transition: all 0.3s var(--ease-smooth);
             color: var(--text-primary);
+            flex: 1;
+            min-width: 200px;
         }
 
         .form-input:focus, .form-select:focus {
@@ -574,6 +417,13 @@
             border-color: rgba(102, 126, 234, 0.5);
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
             transform: translateY(-1px);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
         }
 
         .emoji-picker {
@@ -617,31 +467,69 @@
             cursor: pointer;
             transition: all 0.3s var(--ease-smooth);
             box-shadow: var(--shadow-medium);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .add-btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            transition: all 0.4s var(--ease-smooth);
-            transform: translate(-50%, -50%);
-        }
-
-        .add-btn:hover::before {
-            width: 200%;
-            height: 200%;
         }
 
         .add-btn:hover {
             transform: translateY(-3px);
             box-shadow: var(--shadow-strong);
+        }
+
+        .add-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .delete-btn {
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: all 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-medium);
+        }
+
+        /* Achievement Modal */
+        .achievement-celebration {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: var(--shadow-strong);
+            z-index: 1000;
+            opacity: 0;
+            transition: all 0.4s var(--ease-bounce);
+        }
+
+        .achievement-celebration.show {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .achievement-emoji {
+            font-size: 4em;
+            animation: bounce 0.6s var(--ease-bounce);
+        }
+
+        @keyframes bounce {
+            0%, 20%, 53%, 80%, 100% { transform: translateY(0); }
+            40%, 43% { transform: translateY(-20px); }
+            70% { transform: translateY(-10px); }
+            90% { transform: translateY(-4px); }
         }
 
         /* Loading Animation */
@@ -657,6 +545,21 @@
 
         @keyframes spin {
             to { transform: rotate(360deg); }
+        }
+
+        /* Hidden class */
+        .hidden {
+            display: none;
+        }
+
+        /* Fade animations */
+        .fade-in {
+            animation: fadeIn 0.5s var(--ease-smooth);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* Responsive Design */
@@ -691,21 +594,14 @@
                 min-width: 50px;
                 padding: 8px;
             }
-        }
 
-        /* Hidden class */
-        .hidden {
-            display: none;
-        }
-
-        /* Fade animations */
-        .fade-in {
-            animation: fadeIn 0.5s var(--ease-smooth);
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            .form-row {
+                flex-direction: column;
+            }
+            
+            .form-input, .form-select {
+                min-width: auto;
+            }
         }
     </style>
 </head>
@@ -728,25 +624,25 @@
     <div class="container">
         <!-- Parent Admin Panel -->
         <div id="adminPanel" class="hidden">
-            <div class="glass-card admin-panel">
+            <div class="glass-card">
                 <div class="section-header">
                     👨‍👩‍👧 Add Custom Tasks
                 </div>
                 
                 <div class="add-task-form">
-                    <div class="form-row" style="display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap;">
-                        <input type="text" id="taskName" class="form-input" placeholder="Task name (e.g., Water plants)" maxlength="50" style="flex: 1; min-width: 200px;">
-                        <input type="text" id="taskTime" class="form-input" placeholder="Time/note (e.g., After dinner)" maxlength="30" style="flex: 1; min-width: 200px;">
+                    <div class="form-row">
+                        <input type="text" id="taskName" class="form-input" placeholder="Task name (e.g., Water plants)" maxlength="50">
+                        <input type="text" id="taskTime" class="form-input" placeholder="Time/note (e.g., After dinner)" maxlength="30">
                     </div>
                     
-                    <div class="form-row" style="display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap;">
-                        <select id="taskType" class="form-select" style="flex: 1;">
+                    <div class="form-row">
+                        <select id="taskType" class="form-select">
                             <option value="schoolday">School Days (Mon-Fri)</option>
                             <option value="weekend">Weekends (Sat-Sun)</option>
                             <option value="both">Both School Days & Weekends</option>
                         </select>
                         
-                        <select id="taskCategory" class="form-select" style="flex: 1;">
+                        <select id="taskCategory" class="form-select">
                             <option value="morning">Morning</option>
                             <option value="afternoon">Afternoon</option>
                             <option value="evening">Evening</option>
@@ -792,7 +688,7 @@
                     📚 School Days (Monday - Friday)
                 </div>
                 
-                <div class="progress-container" id="schoolProgress">
+                <div class="progress-container">
                     <div class="progress-header">
                         <span class="progress-label">Weekly Progress</span>
                         <span class="progress-percentage" id="schoolPercentage">0%</span>
@@ -802,11 +698,7 @@
                     </div>
                 </div>
                 
-                <div id="schoolTasksContainer">
-                    <!-- Default school tasks will be inserted here -->
-                </div>
-                
-                <!-- Custom School Day Tasks -->
+                <div id="schoolTasksContainer"></div>
                 <div id="customSchoolTasks"></div>
             </div>
             
@@ -816,7 +708,7 @@
                     🎉 Weekends (Saturday & Sunday)
                 </div>
                 
-                <div class="progress-container" id="weekendProgress">
+                <div class="progress-container">
                     <div class="progress-header">
                         <span class="progress-label">Weekend Progress</span>
                         <span class="progress-percentage" id="weekendPercentage">0%</span>
@@ -826,21 +718,17 @@
                     </div>
                 </div>
                 
-                <div id="weekendTasksContainer">
-                    <!-- Default weekend tasks will be inserted here -->
-                </div>
-                
-                <!-- Custom Weekend Tasks -->
+                <div id="weekendTasksContainer"></div>
                 <div id="customWeekendTasks"></div>
             </div>
             
-            <!-- Custom Tasks Section (for tasks that appear on both school days and weekends) -->
-            <div class="glass-card custom-section" id="customBothSection" style="display: none;">
+            <!-- Custom Tasks Section -->
+            <div class="glass-card" id="customBothSection" style="display: none;">
                 <div class="section-header" style="background: linear-gradient(135deg, #ff6b9d 0%, #c2185b 100%);">
                     🌟 Special Tasks (All Week!)
                 </div>
                 
-                <div class="progress-container" id="bothProgress">
+                <div class="progress-container">
                     <div class="progress-header">
                         <span class="progress-label">All Week Progress</span>
                         <span class="progress-percentage" id="bothPercentage">0%</span>
@@ -855,61 +743,21 @@
         </div>
     </div>
     
-    <!-- Achievement Celebration Modal -->
+    <!-- Achievement Modal -->
     <div class="achievement-celebration" id="achievementModal">
         <div class="achievement-emoji" id="achievementEmoji">🎉</div>
         <h3 style="color: var(--text-primary); margin: 15px 0 5px; font-weight: 700;">Awesome Job!</h3>
         <p style="color: var(--text-muted); margin: 0;">You completed all days for this task!</p>
     </div>
-    
+
     <script>
-        // Wait for DOM to be fully loaded
+        // Wait for DOM to be ready
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM loaded, initializing app...');
-            
-            // Theme Management
-            const themeToggle = document.getElementById('themeToggle');
-            const themeIcon = themeToggle?.querySelector('.theme-icon');
-            const themeText = themeToggle?.querySelector('.theme-text');
-            
-            // Check for saved theme preference or default to light mode
-            const savedTheme = localStorage.getItem('theme') || 
-                              (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-            
-            function setTheme(theme) {
-                document.documentElement.setAttribute('data-theme', theme);
-                try {
-                    localStorage.setItem('theme', theme);
-                } catch (e) {
-                    console.log('LocalStorage not available');
-                }
-                
-                if (themeIcon && themeText) {
-                    if (theme === 'dark') {
-                        themeIcon.textContent = '☀️';
-                        themeText.textContent = 'Light';
-                    } else {
-                        themeIcon.textContent = '🌙';
-                        themeText.textContent = 'Dark';
-                    }
-                }
-            }
-            
-            setTheme(savedTheme);
-            
-            if (themeToggle) {
-                themeToggle.addEventListener('click', () => {
-                    const currentTheme = document.documentElement.getAttribute('data-theme');
-                    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-                    setTheme(newTheme);
-                });
-            }
-            
-            // App state
+            // App State
             let selectedEmoji = '🌟';
             let customTasks = [];
             
-            // Default tasks data
+            // Default Tasks
             const defaultSchoolTasks = [
                 { name: "Make My Bed", time: "7:00 AM - Right after waking up", emoji: "🛏️", category: "morning" },
                 { name: "Take Out Lunchbox from School Bag", time: "7:05 AM - Get ready for the day", emoji: "🎒", category: "morning" },
@@ -921,164 +769,92 @@
                 { name: "Pack Lunch and School Bag", time: "Evening - Get ready for tomorrow", emoji: "🥪", category: "evening" },
                 { name: "Clean My Room", time: "Before dinner - 15 minutes", emoji: "🧹", category: "evening" },
                 { name: "Brush Your Teeth", time: "Morning & Evening - Keep them sparkly!", emoji: "🦷", category: "evening" },
-                { name: "Shower Time", time: "Evening - Get clean and cozy", emoji: "🚿", category: "evening" }
-            ];
-            
-            const defaultWeekendTasks = [
-                { name: "Make My Bed", time: "7:00 AM - Start the day right", emoji: "🛏️", category: "morning" },
-                { name: "Violin Practice", time: "Anytime - 20 minutes", emoji: "🎻", category: "anytime" },
-                { name: "Extra Play Time", time: "More fun time on weekends!", emoji: "🎈", category: "anytime" },
-                { name: "Reading Adventure", time: "Longer reading time - 30 minutes", emoji: "📖", category: "anytime" },
-                { name: "Creative Time", time: "Drawing, writing, or crafts!", emoji: "✨", category: "anytime" },
-                { name: "Clean My Room", time: "Afternoon - Keep it tidy", emoji: "🧹", category: "afternoon" },
-                { name: "Brush Your Teeth", time: "Morning & Evening - Keep them sparkly!", emoji: "🦷", category: "evening" },
                 { name: "Shower Time", time: "Evening - Stay fresh", emoji: "🛁", category: "evening" }
             ];
             
-            // Storage functions with error handling
+            // Storage Functions
             function saveCustomTasks() {
                 try {
-                    if (typeof(Storage) !== "undefined" && localStorage) {
-                        localStorage.setItem('customTasks', JSON.stringify(customTasks));
-                    }
+                    localStorage.setItem('customTasks', JSON.stringify(customTasks));
                 } catch (e) {
-                    console.log('Storage not available, using memory only');
+                    console.log('Storage not available');
                 }
             }
             
             function loadCustomTasks() {
                 try {
-                    if (typeof(Storage) !== "undefined" && localStorage) {
-                        const saved = localStorage.getItem('customTasks');
-                        if (saved) {
-                            customTasks = JSON.parse(saved);
-                        }
-                    }
+                    const saved = localStorage.getItem('customTasks');
+                    if (saved) customTasks = JSON.parse(saved);
                 } catch (e) {
-                    console.log('Storage not available, starting fresh');
-                    customTasks = [];
+                    console.log('Storage not available');
                 }
             }
             
-            // Mode switching
+            // Theme Management
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = themeToggle.querySelector('.theme-icon');
+            const themeText = themeToggle.querySelector('.theme-text');
+            
+            function setTheme(theme) {
+                document.documentElement.setAttribute('data-theme', theme);
+                try {
+                    localStorage.setItem('theme', theme);
+                } catch (e) {}
+                
+                if (theme === 'dark') {
+                    themeIcon.textContent = '☀️';
+                    themeText.textContent = 'Light';
+                } else {
+                    themeIcon.textContent = '🌙';
+                    themeText.textContent = 'Dark';
+                }
+            }
+            
+            // Initialize theme
+            const savedTheme = localStorage.getItem('theme') || 
+                              (window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            setTheme(savedTheme);
+            
+            themeToggle.addEventListener('click', () => {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+            });
+            
+            // Mode Switching
             const childModeBtn = document.getElementById('childMode');
             const parentModeBtn = document.getElementById('parentMode');
             const adminPanel = document.getElementById('adminPanel');
             const childView = document.getElementById('childView');
             
             function switchToChildMode() {
-                console.log('Switching to child mode');
-                if (childModeBtn) childModeBtn.classList.add('active');
-                if (parentModeBtn) parentModeBtn.classList.remove('active');
-                if (adminPanel) adminPanel.classList.add('hidden');
-                if (childView) {
-                    childView.classList.remove('hidden');
-                    childView.classList.add('fade-in');
-                }
+                childModeBtn.classList.add('active');
+                parentModeBtn.classList.remove('active');
+                adminPanel.classList.add('hidden');
+                childView.classList.remove('hidden');
             }
             
             function switchToParentMode() {
-                console.log('Switching to parent mode');
-                if (parentModeBtn) parentModeBtn.classList.add('active');
-                if (childModeBtn) childModeBtn.classList.remove('active');
-                if (adminPanel) {
-                    adminPanel.classList.remove('hidden');
-                    adminPanel.classList.add('fade-in');
-                }
-                if (childView) childView.classList.add('hidden');
+                parentModeBtn.classList.add('active');
+                childModeBtn.classList.remove('active');
+                adminPanel.classList.remove('hidden');
+                childView.classList.add('hidden');
             }
             
-            // Initialize in child mode
-            switchToChildMode();
+            childModeBtn.addEventListener('click', switchToChildMode);
+            parentModeBtn.addEventListener('click', switchToParentMode);
             
-            if (childModeBtn) {
-                childModeBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    switchToChildMode();
-                });
-            }
-            
-            if (parentModeBtn) {
-                parentModeBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    switchToParentMode();
-                });
-            }
-            
-            // Emoji selection
+            // Emoji Selection
             function attachEmojiListeners() {
                 document.querySelectorAll('.emoji-btn').forEach(btn => {
-                    btn.addEventListener('click', function(e) {
-                        e.preventDefault();
+                    btn.addEventListener('click', function() {
                         document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('selected'));
                         this.classList.add('selected');
                         selectedEmoji = this.dataset.emoji;
-                        console.log('Selected emoji:', selectedEmoji);
                     });
                 });
             }
             
-            // Add task functionality with loading state
-            const addTaskBtn = document.getElementById('addTaskBtn');
-            if (addTaskBtn) {
-                addTaskBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    console.log('Add task button clicked');
-                    
-                    const taskName = document.getElementById('taskName')?.value.trim();
-                    const taskTime = document.getElementById('taskTime')?.value.trim();
-                    const taskType = document.getElementById('taskType')?.value;
-                    const taskCategory = document.getElementById('taskCategory')?.value;
-                    const btnText = this.querySelector('.btn-text');
-                    
-                    if (!taskName) {
-                        alert('Please enter a task name!');
-                        return;
-                    }
-                    
-                    // Show loading state
-                    if (btnText) {
-                        btnText.innerHTML = '<span class="loading"></span> Adding...';
-                    }
-                    this.disabled = true;
-                    
-                    setTimeout(() => {
-                        const newTask = {
-                            id: Date.now(),
-                            name: taskName,
-                            time: taskTime || 'Anytime',
-                            type: taskType,
-                            category: taskCategory,
-                            emoji: selectedEmoji
-                        };
-                        
-                        customTasks.push(newTask);
-                        saveCustomTasks();
-                        
-                        // Clear form
-                        const taskNameInput = document.getElementById('taskName');
-                        const taskTimeInput = document.getElementById('taskTime');
-                        if (taskNameInput) taskNameInput.value = '';
-                        if (taskTimeInput) taskTimeInput.value = '';
-                        document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('selected'));
-                        selectedEmoji = '🌟';
-                        
-                        // Reset button
-                        if (btnText) {
-                            btnText.innerHTML = '➕ Add Task';
-                        }
-                        this.disabled = false;
-                        
-                        renderCustomTasks();
-                        renderAllTasks();
-                        updateProgress();
-                        
-                        console.log('Task added successfully');
-                    }, 500);
-                });
-            }
-            
-            // Create task HTML with enhanced design
+            // Create Task HTML
             function createTaskHTML(task, type = 'school') {
                 const isWeekend = type === 'weekend';
                 const isBoth = type === 'both';
@@ -1088,71 +864,35 @@
                     checkboxes = `
                         <div class="day-checkbox">
                             <div class="day-label">SAT</div>
-                            <input type="checkbox" class="checkbox" data-task="${task.name}" data-day="SAT">
+                            <input type="checkbox" class="checkbox">
                         </div>
                         <div class="day-checkbox">
                             <div class="day-label">SUN</div>
-                            <input type="checkbox" class="checkbox" data-task="${task.name}" data-day="SUN">
+                            <input type="checkbox" class="checkbox">
                         </div>
                     `;
                 } else if (isBoth) {
                     checkboxes = `
-                        <div class="day-checkbox">
-                            <div class="day-label">MON</div>
-                            <input type="checkbox" class="checkbox" data-task="${task.name}" data-day="MON">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">TUE</div>
-                            <input type="checkbox" class="checkbox" data-task="${task.name}" data-day="TUE">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">WED</div>
-                            <input type="checkbox" class="checkbox" data-task="${task.name}" data-day="WED">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">THU</div>
-                            <input type="checkbox" class="checkbox" data-task="${task.name}" data-day="THU">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">FRI</div>
-                            <input type="checkbox" class="checkbox" data-task="${task.name}" data-day="FRI">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">SAT</div>
-                            <input type="checkbox" class="checkbox" data-task="${task.name}" data-day="SAT">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">SUN</div>
-                            <input type="checkbox" class="checkbox" data-task="${task.name}" data-day="SUN">
-                        </div>
+                        <div class="day-checkbox"><div class="day-label">MON</div><input type="checkbox" class="checkbox"></div>
+                        <div class="day-checkbox"><div class="day-label">TUE</div><input type="checkbox" class="checkbox"></div>
+                        <div class="day-checkbox"><div class="day-label">WED</div><input type="checkbox" class="checkbox"></div>
+                        <div class="day-checkbox"><div class="day-label">THU</div><input type="checkbox" class="checkbox"></div>
+                        <div class="day-checkbox"><div class="day-label">FRI</div><input type="checkbox" class="checkbox"></div>
+                        <div class="day-checkbox"><div class="day-label">SAT</div><input type="checkbox" class="checkbox"></div>
+                        <div class="day-checkbox"><div class="day-label">SUN</div><input type="checkbox" class="checkbox"></div>
                     `;
                 } else {
                     checkboxes = `
-                        <div class="day-checkbox">
-                            <div class="day-label">MON</div>
-                            <input type="checkbox" class="checkbox" data-task="${task.name}" data-day="MON">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">TUE</div>
-                            <input type="checkbox" class="checkbox" data-task="${task.name}" data-day="TUE">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">WED</div>
-                            <input type="checkbox" class="checkbox" data-task="${task.name}" data-day="WED">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">THU</div>
-                            <input type="checkbox" class="checkbox" data-task="${task.name}" data-day="THU">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">FRI</div>
-                            <input type="checkbox" class="checkbox" data-task="${task.name}" data-day="FRI">
-                        </div>
+                        <div class="day-checkbox"><div class="day-label">MON</div><input type="checkbox" class="checkbox"></div>
+                        <div class="day-checkbox"><div class="day-label">TUE</div><input type="checkbox" class="checkbox"></div>
+                        <div class="day-checkbox"><div class="day-label">WED</div><input type="checkbox" class="checkbox"></div>
+                        <div class="day-checkbox"><div class="day-label">THU</div><input type="checkbox" class="checkbox"></div>
+                        <div class="day-checkbox"><div class="day-label">FRI</div><input type="checkbox" class="checkbox"></div>
                     `;
                 }
                 
                 return `
-                    <div class="task-card ${task.category}" data-task-id="${task.id || task.name}">
+                    <div class="task-card ${task.category}">
                         <div class="task-header">
                             <div class="task-name">${task.name}</div>
                             <div class="task-time">${task.time}</div>
@@ -1165,36 +905,29 @@
                 `;
             }
             
-            // Render all tasks
+            // Render Tasks
             function renderAllTasks() {
-                // Render default school tasks
+                // Render school tasks
                 const schoolContainer = document.getElementById('schoolTasksContainer');
-                if (schoolContainer) {
-                    schoolContainer.innerHTML = defaultSchoolTasks.map(task => createTaskHTML(task, 'school')).join('');
-                }
+                schoolContainer.innerHTML = defaultSchoolTasks.map(task => createTaskHTML(task, 'school')).join('');
                 
-                // Render default weekend tasks
+                // Render weekend tasks
                 const weekendContainer = document.getElementById('weekendTasksContainer');
-                if (weekendContainer) {
-                    weekendContainer.innerHTML = defaultWeekendTasks.map(task => createTaskHTML(task, 'weekend')).join('');
-                }
+                weekendContainer.innerHTML = defaultWeekendTasks.map(task => createTaskHTML(task, 'weekend')).join('');
                 
                 renderCustomTasks();
                 renderChildTasks();
             }
             
-            // Render custom tasks in admin panel
+            // Render Custom Tasks in Admin
             function renderCustomTasks() {
                 const container = document.getElementById('customTasksContainer');
-                if (!container) return;
-                
-                container.innerHTML = '';
-                
                 if (customTasks.length === 0) {
                     container.innerHTML = '<p style="text-align: center; color: var(--text-muted); font-style: italic;">No custom tasks yet. Add one above! ✨</p>';
                     return;
                 }
                 
+                container.innerHTML = '';
                 customTasks.forEach(task => {
                     const taskDiv = document.createElement('div');
                     taskDiv.className = 'task-card';
@@ -1203,482 +936,196 @@
                             <div>
                                 <strong>${task.emoji} ${task.name}</strong><br>
                                 <small style="color: var(--text-muted);">
-                                    ${task.time} • 
-                                    ${task.type === 'schoolday' ? 'School Days' : task.type === 'weekend' ? 'Weekends' : 'All Week'} • 
-                                    ${task.category}
+                                    ${task.time} • ${task.type === 'schoolday' ? 'School Days' : task.type === 'weekend' ? 'Weekends' : 'All Week'} • ${task.category}
                                 </small>
                             </div>
-                            <button class="delete-btn" data-task-id="${task.id}" style="background: #f44336; color: white; border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; font-size: 1.2em; transition: all 0.3s ease;">×</button>
+                            <button class="delete-btn" data-task-id="${task.id}">×</button>
                         </div>
                     `;
                     container.appendChild(taskDiv);
                 });
                 
-                // Attach delete button listeners
+                // Attach delete listeners
                 container.querySelectorAll('.delete-btn').forEach(btn => {
-                    btn.addEventListener('click', function(e) {
-                        e.preventDefault();
+                    btn.addEventListener('click', function() {
                         const taskId = parseInt(this.dataset.taskId);
-                        deleteTask(taskId);
+                        if (confirm('Delete this task?')) {
+                            customTasks = customTasks.filter(task => task.id !== taskId);
+                            saveCustomTasks();
+                            renderCustomTasks();
+                            renderChildTasks();
+                            updateProgress();
+                        }
                     });
                 });
             }
             
-            // Render custom tasks in child view
+            // Render Custom Tasks in Child View
             function renderChildTasks() {
                 const schoolContainer = document.getElementById('customSchoolTasks');
                 const weekendContainer = document.getElementById('customWeekendTasks');
                 const bothContainer = document.getElementById('customBothTasks');
                 const bothSection = document.getElementById('customBothSection');
                 
-                if (schoolContainer) schoolContainer.innerHTML = '';
-                if (weekendContainer) weekendContainer.innerHTML = '';
-                if (bothContainer) bothContainer.innerHTML = '';
+                schoolContainer.innerHTML = '';
+                weekendContainer.innerHTML = '';
+                bothContainer.innerHTML = '';
                 
                 let hasBothTasks = false;
                 
                 customTasks.forEach(task => {
-                    if (task.type === 'schoolday' && schoolContainer) {
+                    if (task.type === 'schoolday') {
                         schoolContainer.innerHTML += createTaskHTML(task, 'school');
-                    } else if (task.type === 'weekend' && weekendContainer) {
+                    } else if (task.type === 'weekend') {
                         weekendContainer.innerHTML += createTaskHTML(task, 'weekend');
-                    } else if (task.type === 'both' && bothContainer) {
+                    } else if (task.type === 'both') {
                         bothContainer.innerHTML += createTaskHTML(task, 'both');
                         hasBothTasks = true;
                     }
                 });
                 
-                // Show/hide the "both" section
-                if (bothSection) {
-                    bothSection.style.display = hasBothTasks ? 'block' : 'none';
-                }
+                bothSection.style.display = hasBothTasks ? 'block' : 'none';
             }
             
-            // Delete task
-            function deleteTask(taskId) {
-                if (confirm('Are you sure you want to delete this task? 🗑️')) {
-                    customTasks = customTasks.filter(task => task.id !== taskId);
+            // Add Task
+            document.getElementById('addTaskBtn').addEventListener('click', function() {
+                const taskName = document.getElementById('taskName').value.trim();
+                const taskTime = document.getElementById('taskTime').value.trim();
+                const taskType = document.getElementById('taskType').value;
+                const taskCategory = document.getElementById('taskCategory').value;
+                const btnText = this.querySelector('.btn-text');
+                
+                if (!taskName) {
+                    alert('Please enter a task name!');
+                    return;
+                }
+                
+                // Loading state
+                btnText.innerHTML = '<span class="loading"></span> Adding...';
+                this.disabled = true;
+                
+                setTimeout(() => {
+                    const newTask = {
+                        id: Date.now(),
+                        name: taskName,
+                        time: taskTime || 'Anytime',
+                        type: taskType,
+                        category: taskCategory,
+                        emoji: selectedEmoji
+                    };
+                    
+                    customTasks.push(newTask);
                     saveCustomTasks();
+                    
+                    // Clear form
+                    document.getElementById('taskName').value = '';
+                    document.getElementById('taskTime').value = '';
+                    document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('selected'));
+                    selectedEmoji = '🌟';
+                    
+                    // Reset button
+                    btnText.innerHTML = '➕ Add Task';
+                    this.disabled = false;
+                    
                     renderCustomTasks();
                     renderChildTasks();
                     updateProgress();
-                    console.log('Task deleted');
-                }
-            }
+                }, 500);
+            });
             
-            // Update progress bars
+            // Update Progress
             function updateProgress() {
-                // School days progress
+                // School progress
                 const schoolCheckboxes = document.querySelectorAll('#schoolTasksContainer .checkbox, #customSchoolTasks .checkbox');
                 const schoolChecked = document.querySelectorAll('#schoolTasksContainer .checkbox:checked, #customSchoolTasks .checkbox:checked');
                 const schoolPercentage = schoolCheckboxes.length > 0 ? Math.round((schoolChecked.length / schoolCheckboxes.length) * 100) : 0;
                 
-                const schoolPercentageEl = document.getElementById('schoolPercentage');
-                const schoolProgressFill = document.getElementById('schoolProgressFill');
-                if (schoolPercentageEl) schoolPercentageEl.textContent = schoolPercentage + '%';
-                if (schoolProgressFill) schoolProgressFill.style.width = schoolPercentage + '%';
+                document.getElementById('schoolPercentage').textContent = schoolPercentage + '%';
+                document.getElementById('schoolProgressFill').style.width = schoolPercentage + '%';
                 
                 // Weekend progress
                 const weekendCheckboxes = document.querySelectorAll('#weekendTasksContainer .checkbox, #customWeekendTasks .checkbox');
                 const weekendChecked = document.querySelectorAll('#weekendTasksContainer .checkbox:checked, #customWeekendTasks .checkbox:checked');
                 const weekendPercentage = weekendCheckboxes.length > 0 ? Math.round((weekendChecked.length / weekendCheckboxes.length) * 100) : 0;
                 
-                const weekendPercentageEl = document.getElementById('weekendPercentage');
-                const weekendProgressFill = document.getElementById('weekendProgressFill');
-                if (weekendPercentageEl) weekendPercentageEl.textContent = weekendPercentage + '%';
-                if (weekendProgressFill) weekendProgressFill.style.width = weekendPercentage + '%';
+                document.getElementById('weekendPercentage').textContent = weekendPercentage + '%';
+                document.getElementById('weekendProgressFill').style.width = weekendPercentage + '%';
                 
                 // Both tasks progress
                 const bothCheckboxes = document.querySelectorAll('#customBothTasks .checkbox');
                 if (bothCheckboxes.length > 0) {
                     const bothChecked = document.querySelectorAll('#customBothTasks .checkbox:checked');
                     const bothPercentage = Math.round((bothChecked.length / bothCheckboxes.length) * 100);
-                    
-                    const bothPercentageEl = document.getElementById('bothPercentage');
-                    const bothProgressFill = document.getElementById('bothProgressFill');
-                    if (bothPercentageEl) bothPercentageEl.textContent = bothPercentage + '%';
-                    if (bothProgressFill) bothProgressFill.style.width = bothPercentage + '%';
+                    document.getElementById('bothPercentage').textContent = bothPercentage + '%';
+                    document.getElementById('bothProgressFill').style.width = bothPercentage + '%';
                 }
             }
             
-            // Show achievement celebration
+            // Achievement Celebration
             function showAchievement(emoji) {
                 const modal = document.getElementById('achievementModal');
                 const emojiElement = document.getElementById('achievementEmoji');
                 
-                if (modal && emojiElement) {
-                    emojiElement.textContent = emoji;
-                    modal.classList.add('show');
-                    
-                    setTimeout(() => {
-                        modal.classList.remove('show');
-                    }, 2000);
-                }
+                emojiElement.textContent = emoji;
+                modal.classList.add('show');
+                
+                setTimeout(() => {
+                    modal.classList.remove('show');
+                }, 2000);
             }
             
-            // Enhanced checkbox interaction
+            // Checkbox Events
             document.addEventListener('change', function(e) {
                 if (e.target.classList.contains('checkbox')) {
                     const dayCheckbox = e.target.closest('.day-checkbox');
                     const taskCard = e.target.closest('.task-card');
                     
                     if (e.target.checked) {
-                        if (dayCheckbox) dayCheckbox.classList.add('completed');
+                        dayCheckbox.classList.add('completed');
                         
-                        // Check if all days are completed
-                        const allCheckboxes = taskCard?.querySelectorAll('.checkbox');
-                        const checkedBoxes = taskCard?.querySelectorAll('.checkbox:checked');
+                        // Check if all checkboxes completed
+                        const allCheckboxes = taskCard.querySelectorAll('.checkbox');
+                        const checkedBoxes = taskCard.querySelectorAll('.checkbox:checked');
                         
-                        if (allCheckboxes && checkedBoxes && allCheckboxes.length === checkedBoxes.length) {
+                        if (allCheckboxes.length === checkedBoxes.length) {
                             const emoji = taskCard.querySelector('.task-emoji');
-                            const emojiText = emoji?.textContent;
+                            const emojiText = emoji.textContent;
                             
-                            // Animate the emoji
-                            if (emoji) {
-                                emoji.style.transform = 'scale(1.5) rotate(360deg)';
-                                setTimeout(() => {
-                                    emoji.style.transform = 'scale(1) rotate(0deg)';
-                                }, 600);
-                            }
+                            // Animate emoji
+                            emoji.style.transform = 'scale(1.5) rotate(360deg)';
+                            setTimeout(() => {
+                                emoji.style.transform = 'scale(1) rotate(0deg)';
+                            }, 600);
                             
-                            // Show achievement celebration
-                            if (emojiText) {
-                                setTimeout(() => {
-                                    showAchievement(emojiText);
-                                }, 300);
-                            }
+                            // Show celebration
+                            setTimeout(() => showAchievement(emojiText), 300);
                         }
                     } else {
-                        if (dayCheckbox) dayCheckbox.classList.remove('completed');
+                        dayCheckbox.classList.remove('completed');
                     }
                     
                     updateProgress();
                 }
             });
             
-            // Initialize the app
+            // Initialize
             loadCustomTasks();
             renderAllTasks();
             updateProgress();
             attachEmojiListeners();
-            
-            // Auto-detect system theme changes
-            if (window.matchMedia) {
-                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-                    if (!localStorage.getItem('theme')) {
-                        setTheme(e.matches ? 'dark' : 'light');
-                    }
-                });
-            }
-            
-            console.log('App initialized successfully');
+            switchToChildMode();
         });
     </script>
 </body>
-</html> btnText = this.querySelector('.btn-text');
+</html>" },
+                { name: "Shower Time", time: "Evening - Get clean and cozy", emoji: "🚿", category: "evening" }
+            ];
             
-            if (!taskName) {
-                alert('Please enter a task name!');
-                return;
-            }
-            
-            // Show loading state
-            btnText.innerHTML = '<span class="loading"></span> Adding...';
-            this.disabled = true;
-            
-            setTimeout(() => {
-                const newTask = {
-                    id: Date.now(),
-                    name: taskName,
-                    time: taskTime || 'Anytime',
-                    type: taskType,
-                    category: taskCategory,
-                    emoji: selectedEmoji
-                };
-                
-                customTasks.push(newTask);
-                saveCustomTasks();
-                
-                // Clear form
-                document.getElementById('taskName').value = '';
-                document.getElementById('taskTime').value = '';
-                document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('selected'));
-                selectedEmoji = '🌟';
-                
-                // Reset button
-                btnText.innerHTML = '➕ Add Task';
-                this.disabled = false;
-                
-                renderCustomTasks();
-                renderAllTasks();
-                updateProgress();
-            }, 500);
-        });
-        
-        // Create task HTML with enhanced design
-        function createTaskHTML(task, type = 'school') {
-            const isWeekend = type === 'weekend';
-            const isBoth = type === 'both';
-            
-            let checkboxes = '';
-            if (isWeekend) {
-                checkboxes = `
-                    <div class="day-checkbox">
-                        <div class="day-label">SAT</div>
-                        <input type="checkbox" class="checkbox" data-task="${task.name}" data-day="SAT">
-                    </div>
-                    <div class="day-checkbox">
-                        <div class="day-label">SUN</div>
-                        <input type="checkbox" class="checkbox" data-task="${task.name}" data-day="SUN">
-                    </div>
-                `;
-            } else if (isBoth) {
-                checkboxes = `
-                    <div class="day-checkbox">
-                        <div class="day-label">MON</div>
-                        <input type="checkbox" class="checkbox" data-task="${task.name}" data-day="MON">
-                    </div>
-                    <div class="day-checkbox">
-                        <div class="day-label">TUE</div>
-                        <input type="checkbox" class="checkbox" data-task="${task.name}" data-day="TUE">
-                    </div>
-                    <div class="day-checkbox">
-                        <div class="day-label">WED</div>
-                        <input type="checkbox" class="checkbox" data-task="${task.name}" data-day="WED">
-                    </div>
-                    <div class="day-checkbox">
-                        <div class="day-label">THU</div>
-                        <input type="checkbox" class="checkbox" data-task="${task.name}" data-day="THU">
-                    </div>
-                    <div class="day-checkbox">
-                        <div class="day-label">FRI</div>
-                        <input type="checkbox" class="checkbox" data-task="${task.name}" data-day="FRI">
-                    </div>
-                    <div class="day-checkbox">
-                        <div class="day-label">SAT</div>
-                        <input type="checkbox" class="checkbox" data-task="${task.name}" data-day="SAT">
-                    </div>
-                    <div class="day-checkbox">
-                        <div class="day-label">SUN</div>
-                        <input type="checkbox" class="checkbox" data-task="${task.name}" data-day="SUN">
-                    </div>
-                `;
-            } else {
-                checkboxes = `
-                    <div class="day-checkbox">
-                        <div class="day-label">MON</div>
-                        <input type="checkbox" class="checkbox" data-task="${task.name}" data-day="MON">
-                    </div>
-                    <div class="day-checkbox">
-                        <div class="day-label">TUE</div>
-                        <input type="checkbox" class="checkbox" data-task="${task.name}" data-day="TUE">
-                    </div>
-                    <div class="day-checkbox">
-                        <div class="day-label">WED</div>
-                        <input type="checkbox" class="checkbox" data-task="${task.name}" data-day="WED">
-                    </div>
-                    <div class="day-checkbox">
-                        <div class="day-label">THU</div>
-                        <input type="checkbox" class="checkbox" data-task="${task.name}" data-day="THU">
-                    </div>
-                    <div class="day-checkbox">
-                        <div class="day-label">FRI</div>
-                        <input type="checkbox" class="checkbox" data-task="${task.name}" data-day="FRI">
-                    </div>
-                `;
-            }
-            
-            return `
-                <div class="task-card ${task.category}" data-task-id="${task.id || task.name}">
-                    <div class="task-header">
-                        <div class="task-name">${task.name}</div>
-                        <div class="task-time">${task.time}</div>
-                        <div class="task-emoji">${task.emoji}</div>
-                    </div>
-                    <div class="day-checkboxes">
-                        ${checkboxes}
-                    </div>
-                </div>
-            `;
-        }
-        
-        // Render all tasks
-        function renderAllTasks() {
-            // Render default school tasks
-            const schoolContainer = document.getElementById('schoolTasksContainer');
-            schoolContainer.innerHTML = defaultSchoolTasks.map(task => createTaskHTML(task, 'school')).join('');
-            
-            // Render default weekend tasks
-            const weekendContainer = document.getElementById('weekendTasksContainer');
-            weekendContainer.innerHTML = defaultWeekendTasks.map(task => createTaskHTML(task, 'weekend')).join('');
-            
-            renderCustomTasks();
-            renderChildTasks();
-        }
-        
-        // Render custom tasks in admin panel
-        function renderCustomTasks() {
-            const container = document.getElementById('customTasksContainer');
-            container.innerHTML = '';
-            
-            if (customTasks.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: var(--text-muted); font-style: italic;">No custom tasks yet. Add one above! ✨</p>';
-                return;
-            }
-            
-            customTasks.forEach(task => {
-                const taskDiv = document.createElement('div');
-                taskDiv.className = 'task-card';
-                taskDiv.innerHTML = `
-                    <div class="task-header">
-                        <div>
-                            <strong>${task.emoji} ${task.name}</strong><br>
-                            <small style="color: var(--text-muted);">
-                                ${task.time} • 
-                                ${task.type === 'schoolday' ? 'School Days' : task.type === 'weekend' ? 'Weekends' : 'All Week'} • 
-                                ${task.category}
-                            </small>
-                        </div>
-                        <button class="delete-btn" onclick="deleteTask(${task.id})" style="background: #f44336; color: white; border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; font-size: 1.2em; transition: all 0.3s ease;">×</button>
-                    </div>
-                `;
-                container.appendChild(taskDiv);
-            });
-        }
-        
-        // Render custom tasks in child view
-        function renderChildTasks() {
-            const schoolContainer = document.getElementById('customSchoolTasks');
-            const weekendContainer = document.getElementById('customWeekendTasks');
-            const bothContainer = document.getElementById('customBothTasks');
-            const bothSection = document.getElementById('customBothSection');
-            
-            schoolContainer.innerHTML = '';
-            weekendContainer.innerHTML = '';
-            bothContainer.innerHTML = '';
-            
-            let hasBothTasks = false;
-            
-            customTasks.forEach(task => {
-                if (task.type === 'schoolday') {
-                    schoolContainer.innerHTML += createTaskHTML(task, 'school');
-                } else if (task.type === 'weekend') {
-                    weekendContainer.innerHTML += createTaskHTML(task, 'weekend');
-                } else if (task.type === 'both') {
-                    bothContainer.innerHTML += createTaskHTML(task, 'both');
-                    hasBothTasks = true;
-                }
-            });
-            
-            // Show/hide the "both" section
-            bothSection.style.display = hasBothTasks ? 'block' : 'none';
-        }
-        
-        // Delete task
-        function deleteTask(taskId) {
-            if (confirm('Are you sure you want to delete this task? 🗑️')) {
-                customTasks = customTasks.filter(task => task.id !== taskId);
-                saveCustomTasks();
-                renderCustomTasks();
-                renderChildTasks();
-                updateProgress();
-            }
-        }
-        
-        // Update progress bars
-        function updateProgress() {
-            // School days progress
-            const schoolCheckboxes = document.querySelectorAll('#schoolTasksContainer .checkbox, #customSchoolTasks .checkbox');
-            const schoolChecked = document.querySelectorAll('#schoolTasksContainer .checkbox:checked, #customSchoolTasks .checkbox:checked');
-            const schoolPercentage = schoolCheckboxes.length > 0 ? Math.round((schoolChecked.length / schoolCheckboxes.length) * 100) : 0;
-            
-            document.getElementById('schoolPercentage').textContent = schoolPercentage + '%';
-            document.getElementById('schoolProgressFill').style.width = schoolPercentage + '%';
-            
-            // Weekend progress
-            const weekendCheckboxes = document.querySelectorAll('#weekendTasksContainer .checkbox, #customWeekendTasks .checkbox');
-            const weekendChecked = document.querySelectorAll('#weekendTasksContainer .checkbox:checked, #customWeekendTasks .checkbox:checked');
-            const weekendPercentage = weekendCheckboxes.length > 0 ? Math.round((weekendChecked.length / weekendCheckboxes.length) * 100) : 0;
-            
-            document.getElementById('weekendPercentage').textContent = weekendPercentage + '%';
-            document.getElementById('weekendProgressFill').style.width = weekendPercentage + '%';
-            
-            // Both tasks progress
-            const bothCheckboxes = document.querySelectorAll('#customBothTasks .checkbox');
-            if (bothCheckboxes.length > 0) {
-                const bothChecked = document.querySelectorAll('#customBothTasks .checkbox:checked');
-                const bothPercentage = Math.round((bothChecked.length / bothCheckboxes.length) * 100);
-                
-                document.getElementById('bothPercentage').textContent = bothPercentage + '%';
-                document.getElementById('bothProgressFill').style.width = bothPercentage + '%';
-            }
-        }
-        
-        // Show achievement celebration
-        function showAchievement(emoji) {
-            const modal = document.getElementById('achievementModal');
-            const emojiElement = document.getElementById('achievementEmoji');
-            
-            emojiElement.textContent = emoji;
-            modal.classList.add('show');
-            
-            setTimeout(() => {
-                modal.classList.remove('show');
-            }, 2000);
-        }
-        
-        // Enhanced checkbox interaction
-        document.addEventListener('change', function(e) {
-            if (e.target.classList.contains('checkbox')) {
-                const dayCheckbox = e.target.closest('.day-checkbox');
-                const taskCard = e.target.closest('.task-card');
-                
-                if (e.target.checked) {
-                    dayCheckbox.classList.add('completed');
-                    
-                    // Check if all days are completed
-                    const allCheckboxes = taskCard.querySelectorAll('.checkbox');
-                    const checkedBoxes = taskCard.querySelectorAll('.checkbox:checked');
-                    
-                    if (allCheckboxes.length === checkedBoxes.length) {
-                        const emoji = taskCard.querySelector('.task-emoji');
-                        const emojiText = emoji.textContent;
-                        
-                        // Animate the emoji
-                        emoji.style.transform = 'scale(1.5) rotate(360deg)';
-                        setTimeout(() => {
-                            emoji.style.transform = 'scale(1) rotate(0deg)';
-                        }, 600);
-                        
-                        // Show achievement celebration
-                        setTimeout(() => {
-                            showAchievement(emojiText);
-                        }, 300);
-                    }
-                } else {
-                    dayCheckbox.classList.remove('completed');
-                }
-                
-                updateProgress();
-            }
-        });
-        
-        // Initialize the app
-        loadCustomTasks();
-        renderAllTasks();
-        updateProgress();
-        
-        // Make deleteTask globally available
-        window.deleteTask = deleteTask;
-        
-        // Auto-detect system theme changes
-        if (window.matchMedia) {
-            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-                if (!localStorage.getItem('theme')) {
-                    setTheme(e.matches ? 'dark' : 'light');
-                }
-            });
-        }
-    </script>
-</body>
-</html>
+            const defaultWeekendTasks = [
+                { name: "Make My Bed", time: "7:00 AM - Start the day right", emoji: "🛏️", category: "morning" },
+                { name: "Violin Practice", time: "Anytime - 20 minutes", emoji: "🎻", category: "anytime" },
+                { name: "Extra Play Time", time: "More fun time on weekends!", emoji: "🎈", category: "anytime" },
+                { name: "Reading Adventure", time: "Longer reading time - 30 minutes", emoji: "📖", category: "anytime" },
+                { name: "Creative Time", time: "Drawing, writing, or crafts!", emoji: "✨", category: "anytime" },
+                { name: "Clean My Room", time: "Afternoon - Keep it tidy", emoji: "🧹", category: "afternoon" },
+                { name: "Brush Your Teeth", time: "Morning & Evening - Keep them sparkly!", emoji: "🦷", category: "evening
