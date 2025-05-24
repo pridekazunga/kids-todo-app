@@ -306,16 +306,26 @@
             backdrop-filter: var(--glass-blur);
             border: 1px solid var(--glass-border);
             min-width: 60px;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
         }
 
         .day-checkbox:hover {
             transform: translateY(-2px) scale(1.05);
             box-shadow: var(--shadow-medium);
+            border-color: rgba(102, 126, 234, 0.3);
         }
 
         .day-checkbox.completed {
             background: rgba(17, 153, 142, 0.2);
             border-color: rgba(17, 153, 142, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .day-checkbox:active {
+            transform: translateY(0) scale(0.98);
         }
 
         .day-label {
@@ -330,11 +340,19 @@
             height: 24px;
             cursor: pointer;
             appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
             border: 2px solid var(--border-color);
             border-radius: 6px;
             background: var(--surface-secondary);
             transition: all 0.3s var(--ease-bounce);
             position: relative;
+            outline: none;
+        }
+
+        .checkbox:hover {
+            border-color: rgba(102, 126, 234, 0.5);
+            transform: scale(1.05);
         }
 
         .checkbox:checked {
@@ -352,6 +370,11 @@
             color: white;
             font-weight: bold;
             font-size: 14px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .checkbox:focus {
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
         }
 
         /* Progress Indicators */
@@ -1102,52 +1125,104 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Checkbox Events
+    // Checkbox Events - Enhanced with better event handling
     document.addEventListener('change', function(e) {
         if (e.target.classList.contains('checkbox')) {
             const dayCheckbox = e.target.closest('.day-checkbox');
             const taskCard = e.target.closest('.task-card');
             
             if (e.target.checked) {
-                if (dayCheckbox) dayCheckbox.classList.add('completed');
+                if (dayCheckbox) {
+                    dayCheckbox.classList.add('completed');
+                    dayCheckbox.style.backgroundColor = 'rgba(17, 153, 142, 0.2)';
+                    dayCheckbox.style.borderColor = 'rgba(17, 153, 142, 0.4)';
+                }
                 
                 // Check if all checkboxes completed
                 if (taskCard) {
                     const allCheckboxes = taskCard.querySelectorAll('.checkbox');
                     const checkedBoxes = taskCard.querySelectorAll('.checkbox:checked');
                     
-                    if (allCheckboxes.length === checkedBoxes.length) {
+                    if (allCheckboxes.length === checkedBoxes.length && allCheckboxes.length > 0) {
                         const emoji = taskCard.querySelector('.task-emoji');
                         const emojiText = emoji ? emoji.textContent : '🎉';
                         
                         // Animate emoji
                         if (emoji) {
                             emoji.style.transform = 'scale(1.5) rotate(360deg)';
+                            emoji.style.transition = 'transform 0.6s ease';
                             setTimeout(function() {
                                 emoji.style.transform = 'scale(1) rotate(0deg)';
                             }, 600);
                         }
                         
-                        // Show celebration
+                        // Show celebration after a short delay
                         setTimeout(function() {
                             showAchievement(emojiText);
                         }, 300);
                     }
                 }
             } else {
-                if (dayCheckbox) dayCheckbox.classList.remove('completed');
+                if (dayCheckbox) {
+                    dayCheckbox.classList.remove('completed');
+                    dayCheckbox.style.backgroundColor = '';
+                    dayCheckbox.style.borderColor = '';
+                }
             }
             
-            updateProgress();
+            // Update progress after checkbox change
+            setTimeout(updateProgress, 100);
         }
     });
     
+    // Enhanced click handler for day checkboxes (backup for touch devices)
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.day-checkbox') && !e.target.classList.contains('checkbox')) {
+            const dayCheckbox = e.target.closest('.day-checkbox');
+            const checkbox = dayCheckbox.querySelector('.checkbox');
+            if (checkbox) {
+                checkbox.checked = !checkbox.checked;
+                // Trigger change event manually
+                const changeEvent = new Event('change', { bubbles: true });
+                checkbox.dispatchEvent(changeEvent);
+            }
+        }
+    });
+    
+    // Test checkbox functionality on load
+    function testCheckboxes() {
+        console.log('Testing checkbox functionality...');
+        const checkboxes = document.querySelectorAll('.checkbox');
+        console.log('Found ' + checkboxes.length + ' checkboxes');
+        
+        // Add click event as backup for touch devices
+        checkboxes.forEach(function(checkbox, index) {
+            // Ensure each checkbox is properly initialized
+            checkbox.addEventListener('click', function(e) {
+                e.stopPropagation();
+                console.log('Checkbox ' + index + ' clicked, checked: ' + this.checked);
+            });
+        });
+    }
+    
+    // Enhanced initialization with checkbox testing
+    function initializeApp() {
+        console.log('Initializing FamilyFlow app...');
+        loadCustomTasks();
+        renderAllTasks();
+        updateProgress();
+        attachEmojiListeners();
+        switchToChildMode();
+        
+        // Test checkboxes after a short delay to ensure all are rendered
+        setTimeout(function() {
+            testCheckboxes();
+            console.log('App fully initialized!');
+        }, 500);
+    }
+    
     // Initialize
-    loadCustomTasks();
-    renderAllTasks();
-    updateProgress();
-    attachEmojiListeners();
-    switchToChildMode();
+    initializeApp();
 });
 </script>
 </body>
