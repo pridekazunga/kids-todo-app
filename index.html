@@ -802,8 +802,9 @@
     </div>
 
 <script>
-// Wait for DOM to be ready
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('App starting...');
+    
     // App State
     let selectedEmoji = '🌟';
     let customTasks = [];
@@ -854,33 +855,33 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Theme Management
     const themeToggle = document.getElementById('themeToggle');
-    const themeIcon = themeToggle.querySelector('.theme-icon');
-    const themeText = themeToggle.querySelector('.theme-text');
-    
-    function setTheme(theme) {
-        document.documentElement.setAttribute('data-theme', theme);
-        try {
-            localStorage.setItem('theme', theme);
-        } catch (e) {}
+    if (themeToggle) {
+        const themeIcon = themeToggle.querySelector('.theme-icon');
+        const themeText = themeToggle.querySelector('.theme-text');
         
-        if (theme === 'dark') {
-            themeIcon.textContent = '☀️';
-            themeText.textContent = 'Light';
-        } else {
-            themeIcon.textContent = '🌙';
-            themeText.textContent = 'Dark';
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            try {
+                localStorage.setItem('theme', theme);
+            } catch (e) {}
+            
+            if (theme === 'dark') {
+                if (themeIcon) themeIcon.textContent = '☀️';
+                if (themeText) themeText.textContent = 'Light';
+            } else {
+                if (themeIcon) themeIcon.textContent = '🌙';
+                if (themeText) themeText.textContent = 'Dark';
+            }
         }
+        
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        setTheme(savedTheme);
+        
+        themeToggle.addEventListener('click', function() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+        });
     }
-    
-    // Initialize theme
-    const savedTheme = localStorage.getItem('theme') || 
-                      (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-    setTheme(savedTheme);
-    
-    themeToggle.addEventListener('click', function() {
-        const currentTheme = document.documentElement.getAttribute('data-theme');
-        setTheme(currentTheme === 'dark' ? 'light' : 'dark');
-    });
     
     // Mode Switching
     const childModeBtn = document.getElementById('childMode');
@@ -889,33 +890,24 @@ document.addEventListener('DOMContentLoaded', function() {
     const childView = document.getElementById('childView');
     
     function switchToChildMode() {
-        childModeBtn.classList.add('active');
-        parentModeBtn.classList.remove('active');
-        adminPanel.classList.add('hidden');
-        childView.classList.remove('hidden');
+        if (childModeBtn) childModeBtn.classList.add('active');
+        if (parentModeBtn) parentModeBtn.classList.remove('active');
+        if (adminPanel) adminPanel.classList.add('hidden');
+        if (childView) childView.classList.remove('hidden');
     }
     
     function switchToParentMode() {
-        parentModeBtn.classList.add('active');
-        childModeBtn.classList.remove('active');
-        adminPanel.classList.remove('hidden');
-        childView.classList.add('hidden');
+        if (parentModeBtn) parentModeBtn.classList.add('active');
+        if (childModeBtn) childModeBtn.classList.remove('active');
+        if (adminPanel) adminPanel.classList.remove('hidden');
+        if (childView) childView.classList.add('hidden');
     }
     
-    childModeBtn.addEventListener('click', switchToChildMode);
-    parentModeBtn.addEventListener('click', switchToParentMode);
-    
-    // Emoji Selection
-    function attachEmojiListeners() {
-        document.querySelectorAll('.emoji-btn').forEach(function(btn) {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.emoji-btn').forEach(function(b) {
-                    b.classList.remove('selected');
-                });
-                this.classList.add('selected');
-                selectedEmoji = this.dataset.emoji;
-            });
-        });
+    if (childModeBtn) {
+        childModeBtn.addEventListener('click', switchToChildMode);
+    }
+    if (parentModeBtn) {
+        parentModeBtn.addEventListener('click', switchToParentMode);
     }
     
     // Create Task HTML
@@ -1020,12 +1012,171 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
+    // Emoji Selection
+    function attachEmojiListeners() {
+        document.querySelectorAll('.emoji-btn').forEach(function(btn) {
+            const newBtn = btn.cloneNode(true);
+            btn.parentNode.replaceChild(newBtn, btn);
+            newBtn.addEventListener('click', function() {
+                document.querySelectorAll('.emoji-btn').forEach(function(b) {
+                    b.classList.remove('selected');
+                });
+                this.classList.add('selected');
+                selectedEmoji = this.dataset.emoji;
+            });
+        });
+    }
+    
     // Add Task
     const addTaskBtn = document.getElementById('addTaskBtn');
     if (addTaskBtn) {
         addTaskBtn.addEventListener('click', function() {
             const taskNameInput = document.getElementById('taskName');
             const taskTimeInput = document.getElementById('taskTime');
+            const taskTypeSelect = document.getElementById('taskType');
+            const taskCategorySelect = document.getElementById('taskCategory');
+            const btnText = this.querySelector('.btn-text');
+            
+            if (!taskNameInput || !taskNameInput.value.trim()) {
+                alert('Please enter a task name!');
+                return;
+            }
+            
+            if (btnText) {
+                btnText.innerHTML = '<span class="loading"></span> Adding...';
+            }
+            this.disabled = true;
+            
+            const self = this;
+            setTimeout(function() {
+                const newTask = {
+                    id: Date.now(),
+                    name: taskNameInput.value.trim(),
+                    time: taskTimeInput ? (taskTimeInput.value.trim() || 'Anytime') : 'Anytime',
+                    type: taskTypeSelect ? taskTypeSelect.value : 'schoolday',
+                    category: taskCategorySelect ? taskCategorySelect.value : 'anytime',
+                    emoji: selectedEmoji
+                };
+                
+                customTasks.push(newTask);
+                saveCustomTasks();
+                
+                if (taskNameInput) taskNameInput.value = '';
+                if (taskTimeInput) taskTimeInput.value = '';
+                document.querySelectorAll('.emoji-btn').forEach(function(b) {
+                    b.classList.remove('selected');
+                });
+                selectedEmoji = '🌟';
+                
+                if (btnText) {
+                    btnText.innerHTML = '➕ Add Task';
+                }
+                self.disabled = false;
+                
+                renderCustomTasks();
+                renderChildTasks();
+                updateProgress();
+            }, 500);
+        });
+    }
+    
+    // Update Progress
+    function updateProgress() {
+        const schoolCheckboxes = document.querySelectorAll('#schoolTasksContainer .checkbox, #customSchoolTasks .checkbox');
+        const schoolChecked = document.querySelectorAll('#schoolTasksContainer .checkbox:checked, #customSchoolTasks .checkbox:checked');
+        const schoolPercentage = schoolCheckboxes.length > 0 ? Math.round((schoolChecked.length / schoolCheckboxes.length) * 100) : 0;
+        
+        const schoolPercentageEl = document.getElementById('schoolPercentage');
+        const schoolProgressFill = document.getElementById('schoolProgressFill');
+        if (schoolPercentageEl) schoolPercentageEl.textContent = schoolPercentage + '%';
+        if (schoolProgressFill) schoolProgressFill.style.width = schoolPercentage + '%';
+        
+        const weekendCheckboxes = document.querySelectorAll('#weekendTasksContainer .checkbox, #customWeekendTasks .checkbox');
+        const weekendChecked = document.querySelectorAll('#weekendTasksContainer .checkbox:checked, #customWeekendTasks .checkbox:checked');
+        const weekendPercentage = weekendCheckboxes.length > 0 ? Math.round((weekendChecked.length / weekendCheckboxes.length) * 100) : 0;
+        
+        const weekendPercentageEl = document.getElementById('weekendPercentage');
+        const weekendProgressFill = document.getElementById('weekendProgressFill');
+        if (weekendPercentageEl) weekendPercentageEl.textContent = weekendPercentage + '%';
+        if (weekendProgressFill) weekendProgressFill.style.width = weekendPercentage + '%';
+        
+        const bothCheckboxes = document.querySelectorAll('#customBothTasks .checkbox');
+        if (bothCheckboxes.length > 0) {
+            const bothChecked = document.querySelectorAll('#customBothTasks .checkbox:checked');
+            const bothPercentage = Math.round((bothChecked.length / bothCheckboxes.length) * 100);
+            const bothPercentageEl = document.getElementById('bothPercentage');
+            const bothProgressFill = document.getElementById('bothProgressFill');
+            if (bothPercentageEl) bothPercentageEl.textContent = bothPercentage + '%';
+            if (bothProgressFill) bothProgressFill.style.width = bothPercentage + '%';
+        }
+    }
+    
+    // Achievement Celebration
+    function showAchievement(emoji) {
+        const modal = document.getElementById('achievementModal');
+        const emojiElement = document.getElementById('achievementEmoji');
+        
+        if (modal && emojiElement) {
+            emojiElement.textContent = emoji;
+            modal.classList.add('show');
+            
+            setTimeout(function() {
+                modal.classList.remove('show');
+            }, 2000);
+        }
+    }
+    
+    // Checkbox Events
+    document.addEventListener('change', function(e) {
+        if (e.target.classList.contains('checkbox')) {
+            const dayCheckbox = e.target.closest('.day-checkbox');
+            const taskCard = e.target.closest('.task-card');
+            
+            if (e.target.checked) {
+                if (dayCheckbox) {
+                    dayCheckbox.classList.add('completed');
+                }
+                
+                if (taskCard) {
+                    const allCheckboxes = taskCard.querySelectorAll('.checkbox');
+                    const checkedBoxes = taskCard.querySelectorAll('.checkbox:checked');
+                    
+                    if (allCheckboxes.length === checkedBoxes.length && allCheckboxes.length > 0) {
+                        const emoji = taskCard.querySelector('.task-emoji');
+                        const emojiText = emoji ? emoji.textContent : '🎉';
+                        
+                        if (emoji) {
+                            emoji.style.transform = 'scale(1.5) rotate(360deg)';
+                            setTimeout(function() {
+                                emoji.style.transform = 'scale(1) rotate(0deg)';
+                            }, 600);
+                        }
+                        
+                        setTimeout(function() {
+                            showAchievement(emojiText);
+                        }, 300);
+                    }
+                }
+            } else {
+                if (dayCheckbox) {
+                    dayCheckbox.classList.remove('completed');
+                }
+            }
+            
+            updateProgress();
+        }
+    });
+    
+    // Initialize
+    loadCustomTasks();
+    renderAllTasks();
+    updateProgress();
+    attachEmojiListeners();
+    switchToChildMode();
+    
+    console.log('App initialized successfully!');
+});
+</script>const taskTimeInput = document.getElementById('taskTime');
             const taskTypeSelect = document.getElementById('taskType');
             const taskCategorySelect = document.getElementById('taskCategory');
             const btnText = this.querySelector('.btn-text');
@@ -1175,54 +1326,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Enhanced click handler for day checkboxes (backup for touch devices)
-    document.addEventListener('click', function(e) {
-        if (e.target.closest('.day-checkbox') && !e.target.classList.contains('checkbox')) {
-            const dayCheckbox = e.target.closest('.day-checkbox');
-            const checkbox = dayCheckbox.querySelector('.checkbox');
-            if (checkbox) {
-                checkbox.checked = !checkbox.checked;
-                // Trigger change event manually
-                const changeEvent = new Event('change', { bubbles: true });
-                checkbox.dispatchEvent(changeEvent);
-            }
-        }
-    });
-    
-    // Test checkbox functionality on load
-    function testCheckboxes() {
-        console.log('Testing checkbox functionality...');
-        const checkboxes = document.querySelectorAll('.checkbox');
-        console.log('Found ' + checkboxes.length + ' checkboxes');
-        
-        // Add click event as backup for touch devices
-        checkboxes.forEach(function(checkbox, index) {
-            // Ensure each checkbox is properly initialized
-            checkbox.addEventListener('click', function(e) {
-                e.stopPropagation();
-                console.log('Checkbox ' + index + ' clicked, checked: ' + this.checked);
-            });
-        });
-    }
-    
-    // Enhanced initialization with checkbox testing
-    function initializeApp() {
-        console.log('Initializing FamilyFlow app...');
-        loadCustomTasks();
-        renderAllTasks();
-        updateProgress();
-        attachEmojiListeners();
-        switchToChildMode();
-        
-        // Test checkboxes after a short delay to ensure all are rendered
-        setTimeout(function() {
-            testCheckboxes();
-            console.log('App fully initialized!');
-        }, 500);
-    }
-    
-    // Initialize
-    initializeApp();
+    console.log('App initialized successfully!');
 });
 </script>
 </body>
