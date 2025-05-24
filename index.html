@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="My Todo List">
+    <meta name="theme-color" content="#ff6b9d">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📝</text></svg>">
+    <title>My Weekly To-Do List</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            margin: 0 auto;
+            background: white;
+            padding: 15mm;
+            box-sizing: border-box;
+            page-break-after: always;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+        
+        .page:last-child {
+            page-break-after: auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #ff1744;
+            font-size: 2.2em;
+            margin-bottom: 8px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #9c27b0;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+        
+        .day-section {
+            border-radius: 12px;
+            padding: 15px;
+            border: 3px solid;
+            height: calc(100% - 100px);
+        }
+        
+        .school-day {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-color: #2196f3;
+        }
+        
+        .weekend {
+            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+            border-color: #9c27b0;
+        }
+        
+        .day-title {
+            font-size: 1.6em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .school-day .day-title {
+            color: #1976d2;
+        }
+        
+        .weekend .day-title {
+            color: #7b1fa2;
+        }
+        
+        .task-item {
+            margin-bottom: 12px;
+            padding: 10px;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            border-left: 4px solid;
+        }
+        
+        .task-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .task-name {
+            font-size: 1.1em;
+            font-weight: bold;
+            flex-grow: 1;
+        }
+        
+        .task-time {
+            font-size: 0.9em;
+            color: #666;
+            font-style: italic;
+            margin-right: 10px;
+        }
+        
+        .emoji {
+            font-size: 1.5em;
+            transition: transform 0.3s ease;
+        }
+        
+        .day-checkboxes {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+        
+        .day-checkbox {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 50px;
+            transition: all 0.3s ease;
+        }
+        
+        .day-label {
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        
+        .school-day .day-label {
+            color: #1976d2;
+        }
+        
+        .weekend .day-label {
+            color: #7b1fa2;
+        }
+        
+        .checkbox {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            transform: scale(1.2);
+        }
+        
+        /* Color coding for different task types */
+        .morning { border-left-color: #ff9800; }
+        .afternoon { border-left-color: #4caf50; }
+        .evening { border-left-color: #673ab7; }
+        .anytime { border-left-color: #e91e63; }
+        
+        .note {
+            background: #fff3e0;
+            border: 2px dashed #ff9800;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 15px;
+            text-align: center;
+            color: #e65100;
+            font-weight: bold;
+            font-size: 0.95em;
+        }
+        
+        @media print {
+            body { 
+                background: white !important;
+                margin: 0;
+                padding: 0;
+            }
+            .page { 
+                box-shadow: none !important;
+                margin: 0 !important;
+                width: 100% !important;
+                min-height: 100vh !important;
+                padding: 10mm !important;
+            }
+            .day-section {
+                border: 2px solid !important;
+                background: white !important;
+            }
+            .task-item {
+                box-shadow: none !important;
+                border: 1px solid #ccc !important;
+            }
+        }
+        
+        /* Mobile Optimization */
+        @media screen and (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            .page {
+                width: 100%;
+                min-height: auto;
+                padding: 15px;
+                margin: 5px 0;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            }
+            .day-checkboxes {
+                gap: 10px;
+                justify-content: center;
+            }
+            .day-checkbox {
+                min-width: 45px;
+            }
+            .day-label {
+                font-size: 0.75em;
+            }
+            .checkbox {
+                width: 22px;
+                height: 22px;
+                transform: scale(1.1);
+            }
+            h1 {
+                font-size: 2em;
+            }
+            .task-name {
+                font-size: 1.05em;
+            }
+            .task-time {
+                font-size: 0.85em;
+            }
+            .emoji {
+                font-size: 1.3em;
+            }
+            .task-item {
+                margin-bottom: 10px;
+                padding: 12px;
+            }
+            .note {
+                font-size: 0.9em;
+                padding: 10px;
+            }
+        }
+        
+        /* Touch-friendly enhancements */
+        .checkbox {
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+        
+        .day-checkbox {
+            padding: 5px;
+            border-radius: 8px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        /* PWA Meta Tags Support */
+        @media screen and (max-width: 480px) {
+            .page {
+                padding: 10px;
+            }
+            .day-section {
+                padding: 12px;
+            }
+            h1 {
+                font-size: 1.7em;
+                margin-bottom: 5px;
+            }
+            .subtitle {
+                font-size: 1em;
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Page 1: School Days -->
+    <div class="page">
+        <h1>🌟 My Weekly To-Do List 🌟</h1>
+        <div class="subtitle">Wake up at 7:00 AM and make every day amazing!</div>
+        
+        <div class="day-section school-day">
+            <div class="day-title">📚 School Days (Monday - Friday) 📚</div>
+            
+            <div class="task-item morning">
+                <div class="task-header">
+                    <div class="task-name">Make My Bed</div>
+                    <div class="task-time">7:00 AM - Right after waking up</div>
+                    <div class="emoji">🛏️</div>
+                </div>
+                <div class="day-checkboxes">
+                    <div class="day-checkbox">
+                        <div class="day-label">MON</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">TUE</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">WED</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">THU</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">FRI</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="task-item morning">
+                <div class="task-header">
+                    <div class="task-name">Take Out Lunchbox from School Bag</div>
+                    <div class="task-time">7:05 AM - Get ready for the day</div>
+                    <div class="emoji">🎒</div>
+                </div>
+                <div class="day-checkboxes">
+                    <div class="day-checkbox">
+                        <div class="day-label">MON</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">TUE</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">WED</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">THU</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">FRI</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="task-item afternoon">
+                <div class="task-header">
+                    <div class="task-name">Homework Time</div>
+                    <div class="task-time">After school - 30 minutes</div>
+                    <div class="emoji">📝</div>
+                </div>
+                <div class="day-checkboxes">
+                    <div class="day-checkbox">
+                        <div class="day-label">MON</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">TUE</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">WED</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">THU</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">FRI</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="task-item afternoon">
+                <div class="task-header">
+                    <div class="task-name">Violin Practice</div>
+                    <div class="task-time">After homework - 20 minutes</div>
+                    <div class="emoji">🎻</div>
+                </div>
+                <div class="day-checkboxes">
+                    <div class="day-checkbox">
+                        <div class="day-label">MON</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">TUE</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">WED</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">THU</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">FRI</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="task-item afternoon">
+                <div class="task-header">
+                    <div class="task-name">Play Time</div>
+                    <div class="task-time">Free time - Have fun!</div>
+                    <div class="emoji">🎮</div>
+                </div>
+                <div class="day-checkboxes">
+                    <div class="day-checkbox">
+                        <div class="day-label">MON</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">TUE</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">WED</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">THU</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">FRI</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="task-item anytime">
+                <div class="task-header">
+                    <div class="task-name">Reading Time</div>
+                    <div class="task-time">Anytime - 20 minutes</div>
+                    <div class="emoji">📚</div>
+                </div>
+                <div class="day-checkboxes">
+                    <div class="day-checkbox">
+                        <div class="day-label">MON</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">TUE</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">WED</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">THU</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">FRI</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="task-item anytime">
+                <div class="task-header">
+                    <div class="task-name">Drawing or Writing</div>
+                    <div class="task-time">When I feel creative!</div>
+                    <div class="emoji">🎨</div>
+                </div>
+                <div class="day-checkboxes">
+                    <div class="day-checkbox">
+                        <div class="day-label">MON</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">TUE</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">WED</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">THU</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">FRI</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="task-item evening">
+                <div class="task-header">
+                    <div class="task-name">Pack Lunch and School Bag</div>
+                    <div class="task-time">Evening - Get ready for tomorrow</div>
+                    <div class="emoji">🥪</div>
+                </div>
+                <div class="day-checkboxes">
+                    <div class="day-checkbox">
+                        <div class="day-label">MON</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">TUE</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">WED</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">THU</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">FRI</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="task-item evening">
+                <div class="task-header">
+                    <div class="task-name">Clean My Room</div>
+                    <div class="task-time">Before dinner - 15 minutes</div>
+                    <div class="emoji">🧹</div>
+                </div>
+                <div class="day-checkboxes">
+                    <div class="day-checkbox">
+                        <div class="day-label">MON</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">TUE</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">WED</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">THU</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">FRI</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="task-item evening">
+                <div class="task-header">
+                    <div class="task-name">Shower Time</div>
+                    <div class="task-time">Evening - Get clean and cozy</div>
+                    <div class="emoji">🚿</div>
+                </div>
+                <div class="day-checkboxes">
+                    <div class="day-checkbox">
+                        <div class="day-label">MON</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">TUE</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">WED</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">THU</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">FRI</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="note">
+                🌟 Check off each school day as you complete your tasks! 🌟<br>
+                Try to get all 5 checkboxes for each task! 💪
+            </div>
+        </div>
+    </div>
+    
+    <!-- Page 2: Weekends -->
+    <div class="page">
+        <h1>🌟 My Weekly To-Do List 🌟</h1>
+        <div class="subtitle">Weekend Fun & Responsibility!</div>
+        
+        <div class="day-section weekend">
+            <div class="day-title">🎉 Weekends (Saturday & Sunday) 🎉</div>
+            
+            <div class="task-item morning">
+                <div class="task-header">
+                    <div class="task-name">Make My Bed</div>
+                    <div class="task-time">7:00 AM - Start the day right</div>
+                    <div class="emoji">🛏️</div>
+                </div>
+                <div class="day-checkboxes">
+                    <div class="day-checkbox">
+                        <div class="day-label">SAT</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">SUN</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="task-item anytime">
+                <div class="task-header">
+                    <div class="task-name">Violin Practice</div>
+                    <div class="task-time">Anytime - 20 minutes</div>
+                    <div class="emoji">🎻</div>
+                </div>
+                <div class="day-checkboxes">
+                    <div class="day-checkbox">
+                        <div class="day-label">SAT</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">SUN</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="task-item anytime">
+                <div class="task-header">
+                    <div class="task-name">Extra Play Time</div>
+                    <div class="task-time">More fun time on weekends!</div>
+                    <div class="emoji">🎈</div>
+                </div>
+                <div class="day-checkboxes">
+                    <div class="day-checkbox">
+                        <div class="day-label">SAT</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">SUN</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="task-item anytime">
+                <div class="task-header">
+                    <div class="task-name">Reading Adventure</div>
+                    <div class="task-time">Longer reading time - 30 minutes</div>
+                    <div class="emoji">📖</div>
+                </div>
+                <div class="day-checkboxes">
+                    <div class="day-checkbox">
+                        <div class="day-label">SAT</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">SUN</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="task-item anytime">
+                <div class="task-header">
+                    <div class="task-name">Creative Time</div>
+                    <div class="task-time">Drawing, writing, or crafts!</div>
+                    <div class="emoji">✨</div>
+                </div>
+                <div class="day-checkboxes">
+                    <div class="day-checkbox">
+                        <div class="day-label">SAT</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">SUN</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="task-item afternoon">
+                <div class="task-header">
+                    <div class="task-name">Clean My Room</div>
+                    <div class="task-time">Afternoon - Keep it tidy</div>
+                    <div class="emoji">🧹</div>
+                </div>
+                <div class="day-checkboxes">
+                    <div class="day-checkbox">
+                        <div class="day-label">SAT</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">SUN</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="task-item evening">
+                <div class="task-header">
+                    <div class="task-name">Shower Time</div>
+                    <div class="task-time">Evening - Stay fresh</div>
+                    <div class="emoji">🛁</div>
+                </div>
+                <div class="day-checkboxes">
+                    <div class="day-checkbox">
+                        <div class="day-label">SAT</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">SUN</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="note">
+                🌟 Check off each weekend day as you complete your tasks! 🌟<br>
+                Try to get both Saturday and Sunday checkboxes! 💪<br>
+                Weekends are for fun AND being responsible! 🎊
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Add interactivity to make it more engaging
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkboxes = document.querySelectorAll('.checkbox');
+            
+            checkboxes.forEach(function(checkbox) {
+                checkbox.addEventListener('change', function() {
+                    const dayCheckbox = this.closest('.day-checkbox');
+                    const taskItem = this.closest('.task-item');
+                    
+                    if (this.checked) {
+                        dayCheckbox.style.backgroundColor = '#e8f5e8';
+                        dayCheckbox.style.borderRadius = '8px';
+                        dayCheckbox.style.padding = '5px';
+                        
+                        // Check if all days are completed for this task
+                        const allCheckboxes = taskItem.querySelectorAll('.checkbox');
+                        const checkedBoxes = taskItem.querySelectorAll('.checkbox:checked');
+                        
+                        if (allCheckboxes.length === checkedBoxes.length) {
+                            // All days completed - celebrate!
+                            const emoji = taskItem.querySelector('.emoji');
+                            emoji.style.transform = 'scale(1.5)';
+                            setTimeout(function() {
+                                emoji.style.transform = 'scale(1)';
+                            }, 500);
+                        }
+                    } else {
+                        dayCheckbox.style.backgroundColor = '';
+                        dayCheckbox.style.borderRadius = '';
+                        dayCheckbox.style.padding = '';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
