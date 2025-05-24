@@ -769,283 +769,389 @@
                 { name: "Pack Lunch and School Bag", time: "Evening - Get ready for tomorrow", emoji: "🥪", category: "evening" },
                 { name: "Clean My Room", time: "Before dinner - 15 minutes", emoji: "🧹", category: "evening" },
                 { name: "Brush Your Teeth", time: "Morning & Evening - Keep them sparkly!", emoji: "🦷", category: "evening" },
-                { name: "Shower Time", time: "Evening - Stay fresh", emoji: "🛁", category: "evening" }
-            ];
-            
-            // Storage Functions
-            function saveCustomTasks() {
-                try {
-                    localStorage.setItem('customTasks', JSON.stringify(customTasks));
-                } catch (e) {
-                    console.log('Storage not available');
-                }
-            }
-            
-            function loadCustomTasks() {
-                try {
-                    const saved = localStorage.getItem('customTasks');
-                    if (saved) customTasks = JSON.parse(saved);
-                } catch (e) {
-                    console.log('Storage not available');
-                }
-            }
-            
-            // Theme Management
-            const themeToggle = document.getElementById('themeToggle');
-            const themeIcon = themeToggle.querySelector('.theme-icon');
-            const themeText = themeToggle.querySelector('.theme-text');
-            
-            function setTheme(theme) {
-                document.documentElement.setAttribute('data-theme', theme);
-                try {
-                    localStorage.setItem('theme', theme);
-                } catch (e) {}
-                
-                if (theme === 'dark') {
-                    themeIcon.textContent = '☀️';
-                    themeText.textContent = 'Light';
-                } else {
-                    themeIcon.textContent = '🌙';
-                    themeText.textContent = 'Dark';
-                }
-            }
-            
-            // Initialize theme
-            const savedTheme = localStorage.getItem('theme') || 
-                              (window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-            setTheme(savedTheme);
-            
-            themeToggle.addEventListener('click', () => {
-                const currentTheme = document.documentElement.getAttribute('data-theme');
-                setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+    </div>
+    
+    <!-- Achievement Modal -->
+    <div class="achievement-celebration" id="achievementModal">
+        <div class="achievement-emoji" id="achievementEmoji">🎉</div>
+        <h3 style="color: var(--text-primary); margin: 15px 0 5px; font-weight: 700;">Awesome Job!</h3>
+        <p style="color: var(--text-muted); margin: 0;">You completed all days for this task!</p>
+    </div>
+
+<script>
+// Wait for DOM to be ready
+document.addEventListener('DOMContentLoaded', function() {
+    // App State
+    let selectedEmoji = '🌟';
+    let customTasks = [];
+    
+    // Default Tasks
+    const defaultSchoolTasks = [
+        { name: "Make My Bed", time: "7:00 AM - Right after waking up", emoji: "🛏️", category: "morning" },
+        { name: "Take Out Lunchbox from School Bag", time: "7:05 AM - Get ready for the day", emoji: "🎒", category: "morning" },
+        { name: "Homework Time", time: "After school - 30 minutes", emoji: "📝", category: "afternoon" },
+        { name: "Violin Practice", time: "After homework - 20 minutes", emoji: "🎻", category: "afternoon" },
+        { name: "Play Time", time: "Free time - Have fun!", emoji: "🎮", category: "afternoon" },
+        { name: "Reading Time", time: "Anytime - 20 minutes", emoji: "📚", category: "anytime" },
+        { name: "Drawing or Writing", time: "When I feel creative!", emoji: "🎨", category: "anytime" },
+        { name: "Pack Lunch and School Bag", time: "Evening - Get ready for tomorrow", emoji: "🥪", category: "evening" },
+        { name: "Clean My Room", time: "Before dinner - 15 minutes", emoji: "🧹", category: "evening" },
+        { name: "Brush Your Teeth", time: "Morning & Evening - Keep them sparkly!", emoji: "🦷", category: "evening" },
+        { name: "Shower Time", time: "Evening - Get clean and cozy", emoji: "🚿", category: "evening" }
+    ];
+    
+    const defaultWeekendTasks = [
+        { name: "Make My Bed", time: "7:00 AM - Start the day right", emoji: "🛏️", category: "morning" },
+        { name: "Violin Practice", time: "Anytime - 20 minutes", emoji: "🎻", category: "anytime" },
+        { name: "Extra Play Time", time: "More fun time on weekends!", emoji: "🎈", category: "anytime" },
+        { name: "Reading Adventure", time: "Longer reading time - 30 minutes", emoji: "📖", category: "anytime" },
+        { name: "Creative Time", time: "Drawing, writing, or crafts!", emoji: "✨", category: "anytime" },
+        { name: "Clean My Room", time: "Afternoon - Keep it tidy", emoji: "🧹", category: "afternoon" },
+        { name: "Brush Your Teeth", time: "Morning & Evening - Keep them sparkly!", emoji: "🦷", category: "evening" },
+        { name: "Shower Time", time: "Evening - Stay fresh", emoji: "🛁", category: "evening" }
+    ];
+    
+    // Storage Functions
+    function saveCustomTasks() {
+        try {
+            localStorage.setItem('customTasks', JSON.stringify(customTasks));
+        } catch (e) {
+            console.log('Storage not available');
+        }
+    }
+    
+    function loadCustomTasks() {
+        try {
+            const saved = localStorage.getItem('customTasks');
+            if (saved) customTasks = JSON.parse(saved);
+        } catch (e) {
+            console.log('Storage not available');
+        }
+    }
+    
+    // Theme Management
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = themeToggle.querySelector('.theme-icon');
+    const themeText = themeToggle.querySelector('.theme-text');
+    
+    function setTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        try {
+            localStorage.setItem('theme', theme);
+        } catch (e) {}
+        
+        if (theme === 'dark') {
+            themeIcon.textContent = '☀️';
+            themeText.textContent = 'Light';
+        } else {
+            themeIcon.textContent = '🌙';
+            themeText.textContent = 'Dark';
+        }
+    }
+    
+    // Initialize theme
+    const savedTheme = localStorage.getItem('theme') || 
+                      (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    setTheme(savedTheme);
+    
+    themeToggle.addEventListener('click', function() {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+    });
+    
+    // Mode Switching
+    const childModeBtn = document.getElementById('childMode');
+    const parentModeBtn = document.getElementById('parentMode');
+    const adminPanel = document.getElementById('adminPanel');
+    const childView = document.getElementById('childView');
+    
+    function switchToChildMode() {
+        childModeBtn.classList.add('active');
+        parentModeBtn.classList.remove('active');
+        adminPanel.classList.add('hidden');
+        childView.classList.remove('hidden');
+    }
+    
+    function switchToParentMode() {
+        parentModeBtn.classList.add('active');
+        childModeBtn.classList.remove('active');
+        adminPanel.classList.remove('hidden');
+        childView.classList.add('hidden');
+    }
+    
+    childModeBtn.addEventListener('click', switchToChildMode);
+    parentModeBtn.addEventListener('click', switchToParentMode);
+    
+    // Emoji Selection
+    function attachEmojiListeners() {
+        document.querySelectorAll('.emoji-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.emoji-btn').forEach(function(b) {
+                    b.classList.remove('selected');
+                });
+                this.classList.add('selected');
+                selectedEmoji = this.dataset.emoji;
             });
-            
-            // Mode Switching
-            const childModeBtn = document.getElementById('childMode');
-            const parentModeBtn = document.getElementById('parentMode');
-            const adminPanel = document.getElementById('adminPanel');
-            const childView = document.getElementById('childView');
-            
-            function switchToChildMode() {
-                childModeBtn.classList.add('active');
-                parentModeBtn.classList.remove('active');
-                adminPanel.classList.add('hidden');
-                childView.classList.remove('hidden');
-            }
-            
-            function switchToParentMode() {
-                parentModeBtn.classList.add('active');
-                childModeBtn.classList.remove('active');
-                adminPanel.classList.remove('hidden');
-                childView.classList.add('hidden');
-            }
-            
-            childModeBtn.addEventListener('click', switchToChildMode);
-            parentModeBtn.addEventListener('click', switchToParentMode);
-            
-            // Emoji Selection
-            function attachEmojiListeners() {
-                document.querySelectorAll('.emoji-btn').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('selected'));
-                        this.classList.add('selected');
-                        selectedEmoji = this.dataset.emoji;
+        });
+    }
+    
+    // Create Task HTML
+    function createTaskHTML(task, type) {
+        const isWeekend = type === 'weekend';
+        const isBoth = type === 'both';
+        
+        let checkboxes = '';
+        if (isWeekend) {
+            checkboxes = '<div class="day-checkbox"><div class="day-label">SAT</div><input type="checkbox" class="checkbox"></div><div class="day-checkbox"><div class="day-label">SUN</div><input type="checkbox" class="checkbox"></div>';
+        } else if (isBoth) {
+            checkboxes = '<div class="day-checkbox"><div class="day-label">MON</div><input type="checkbox" class="checkbox"></div><div class="day-checkbox"><div class="day-label">TUE</div><input type="checkbox" class="checkbox"></div><div class="day-checkbox"><div class="day-label">WED</div><input type="checkbox" class="checkbox"></div><div class="day-checkbox"><div class="day-label">THU</div><input type="checkbox" class="checkbox"></div><div class="day-checkbox"><div class="day-label">FRI</div><input type="checkbox" class="checkbox"></div><div class="day-checkbox"><div class="day-label">SAT</div><input type="checkbox" class="checkbox"></div><div class="day-checkbox"><div class="day-label">SUN</div><input type="checkbox" class="checkbox"></div>';
+        } else {
+            checkboxes = '<div class="day-checkbox"><div class="day-label">MON</div><input type="checkbox" class="checkbox"></div><div class="day-checkbox"><div class="day-label">TUE</div><input type="checkbox" class="checkbox"></div><div class="day-checkbox"><div class="day-label">WED</div><input type="checkbox" class="checkbox"></div><div class="day-checkbox"><div class="day-label">THU</div><input type="checkbox" class="checkbox"></div><div class="day-checkbox"><div class="day-label">FRI</div><input type="checkbox" class="checkbox"></div>';
+        }
+        
+        return '<div class="task-card ' + task.category + '"><div class="task-header"><div class="task-name">' + task.name + '</div><div class="task-time">' + task.time + '</div><div class="task-emoji">' + task.emoji + '</div></div><div class="day-checkboxes">' + checkboxes + '</div></div>';
+    }
+    
+    // Render Tasks
+    function renderAllTasks() {
+        const schoolContainer = document.getElementById('schoolTasksContainer');
+        const weekendContainer = document.getElementById('weekendTasksContainer');
+        
+        if (schoolContainer) {
+            schoolContainer.innerHTML = defaultSchoolTasks.map(function(task) {
+                return createTaskHTML(task, 'school');
+            }).join('');
+        }
+        
+        if (weekendContainer) {
+            weekendContainer.innerHTML = defaultWeekendTasks.map(function(task) {
+                return createTaskHTML(task, 'weekend');
+            }).join('');
+        }
+        
+        renderCustomTasks();
+        renderChildTasks();
+    }
+    
+    // Render Custom Tasks in Admin
+    function renderCustomTasks() {
+        const container = document.getElementById('customTasksContainer');
+        if (!container) return;
+        
+        if (customTasks.length === 0) {
+            container.innerHTML = '<p style="text-align: center; color: var(--text-muted); font-style: italic;">No custom tasks yet. Add one above! ✨</p>';
+            return;
+        }
+        
+        container.innerHTML = '';
+        customTasks.forEach(function(task) {
+            const taskDiv = document.createElement('div');
+            taskDiv.className = 'task-card';
+            taskDiv.innerHTML = '<div class="task-header"><div><strong>' + task.emoji + ' ' + task.name + '</strong><br><small style="color: var(--text-muted);">' + task.time + ' • ' + (task.type === 'schoolday' ? 'School Days' : task.type === 'weekend' ? 'Weekends' : 'All Week') + ' • ' + task.category + '</small></div><button class="delete-btn" data-task-id="' + task.id + '">×</button></div>';
+            container.appendChild(taskDiv);
+        });
+        
+        // Attach delete listeners
+        container.querySelectorAll('.delete-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                const taskId = parseInt(this.dataset.taskId);
+                if (confirm('Delete this task?')) {
+                    customTasks = customTasks.filter(function(task) {
+                        return task.id !== taskId;
                     });
-                });
-            }
-            
-            // Create Task HTML
-            function createTaskHTML(task, type = 'school') {
-                const isWeekend = type === 'weekend';
-                const isBoth = type === 'both';
-                
-                let checkboxes = '';
-                if (isWeekend) {
-                    checkboxes = `
-                        <div class="day-checkbox">
-                            <div class="day-label">SAT</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">SUN</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                    `;
-                } else if (isBoth) {
-                    checkboxes = `
-                        <div class="day-checkbox"><div class="day-label">MON</div><input type="checkbox" class="checkbox"></div>
-                        <div class="day-checkbox"><div class="day-label">TUE</div><input type="checkbox" class="checkbox"></div>
-                        <div class="day-checkbox"><div class="day-label">WED</div><input type="checkbox" class="checkbox"></div>
-                        <div class="day-checkbox"><div class="day-label">THU</div><input type="checkbox" class="checkbox"></div>
-                        <div class="day-checkbox"><div class="day-label">FRI</div><input type="checkbox" class="checkbox"></div>
-                        <div class="day-checkbox"><div class="day-label">SAT</div><input type="checkbox" class="checkbox"></div>
-                        <div class="day-checkbox"><div class="day-label">SUN</div><input type="checkbox" class="checkbox"></div>
-                    `;
-                } else {
-                    checkboxes = `
-                        <div class="day-checkbox"><div class="day-label">MON</div><input type="checkbox" class="checkbox"></div>
-                        <div class="day-checkbox"><div class="day-label">TUE</div><input type="checkbox" class="checkbox"></div>
-                        <div class="day-checkbox"><div class="day-label">WED</div><input type="checkbox" class="checkbox"></div>
-                        <div class="day-checkbox"><div class="day-label">THU</div><input type="checkbox" class="checkbox"></div>
-                        <div class="day-checkbox"><div class="day-label">FRI</div><input type="checkbox" class="checkbox"></div>
-                    `;
-                }
-                
-                return `
-                    <div class="task-card ${task.category}">
-                        <div class="task-header">
-                            <div class="task-name">${task.name}</div>
-                            <div class="task-time">${task.time}</div>
-                            <div class="task-emoji">${task.emoji}</div>
-                        </div>
-                        <div class="day-checkboxes">
-                            ${checkboxes}
-                        </div>
-                    </div>
-                `;
-            }
-            
-            // Render Tasks
-            function renderAllTasks() {
-                // Render school tasks
-                const schoolContainer = document.getElementById('schoolTasksContainer');
-                schoolContainer.innerHTML = defaultSchoolTasks.map(task => createTaskHTML(task, 'school')).join('');
-                
-                // Render weekend tasks
-                const weekendContainer = document.getElementById('weekendTasksContainer');
-                weekendContainer.innerHTML = defaultWeekendTasks.map(task => createTaskHTML(task, 'weekend')).join('');
-                
-                renderCustomTasks();
-                renderChildTasks();
-            }
-            
-            // Render Custom Tasks in Admin
-            function renderCustomTasks() {
-                const container = document.getElementById('customTasksContainer');
-                if (customTasks.length === 0) {
-                    container.innerHTML = '<p style="text-align: center; color: var(--text-muted); font-style: italic;">No custom tasks yet. Add one above! ✨</p>';
-                    return;
-                }
-                
-                container.innerHTML = '';
-                customTasks.forEach(task => {
-                    const taskDiv = document.createElement('div');
-                    taskDiv.className = 'task-card';
-                    taskDiv.innerHTML = `
-                        <div class="task-header">
-                            <div>
-                                <strong>${task.emoji} ${task.name}</strong><br>
-                                <small style="color: var(--text-muted);">
-                                    ${task.time} • ${task.type === 'schoolday' ? 'School Days' : task.type === 'weekend' ? 'Weekends' : 'All Week'} • ${task.category}
-                                </small>
-                            </div>
-                            <button class="delete-btn" data-task-id="${task.id}">×</button>
-                        </div>
-                    `;
-                    container.appendChild(taskDiv);
-                });
-                
-                // Attach delete listeners
-                container.querySelectorAll('.delete-btn').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const taskId = parseInt(this.dataset.taskId);
-                        if (confirm('Delete this task?')) {
-                            customTasks = customTasks.filter(task => task.id !== taskId);
-                            saveCustomTasks();
-                            renderCustomTasks();
-                            renderChildTasks();
-                            updateProgress();
-                        }
-                    });
-                });
-            }
-            
-            // Render Custom Tasks in Child View
-            function renderChildTasks() {
-                const schoolContainer = document.getElementById('customSchoolTasks');
-                const weekendContainer = document.getElementById('customWeekendTasks');
-                const bothContainer = document.getElementById('customBothTasks');
-                const bothSection = document.getElementById('customBothSection');
-                
-                schoolContainer.innerHTML = '';
-                weekendContainer.innerHTML = '';
-                bothContainer.innerHTML = '';
-                
-                let hasBothTasks = false;
-                
-                customTasks.forEach(task => {
-                    if (task.type === 'schoolday') {
-                        schoolContainer.innerHTML += createTaskHTML(task, 'school');
-                    } else if (task.type === 'weekend') {
-                        weekendContainer.innerHTML += createTaskHTML(task, 'weekend');
-                    } else if (task.type === 'both') {
-                        bothContainer.innerHTML += createTaskHTML(task, 'both');
-                        hasBothTasks = true;
-                    }
-                });
-                
-                bothSection.style.display = hasBothTasks ? 'block' : 'none';
-            }
-            
-            // Add Task
-            document.getElementById('addTaskBtn').addEventListener('click', function() {
-                const taskName = document.getElementById('taskName').value.trim();
-                const taskTime = document.getElementById('taskTime').value.trim();
-                const taskType = document.getElementById('taskType').value;
-                const taskCategory = document.getElementById('taskCategory').value;
-                const btnText = this.querySelector('.btn-text');
-                
-                if (!taskName) {
-                    alert('Please enter a task name!');
-                    return;
-                }
-                
-                // Loading state
-                btnText.innerHTML = '<span class="loading"></span> Adding...';
-                this.disabled = true;
-                
-                setTimeout(() => {
-                    const newTask = {
-                        id: Date.now(),
-                        name: taskName,
-                        time: taskTime || 'Anytime',
-                        type: taskType,
-                        category: taskCategory,
-                        emoji: selectedEmoji
-                    };
-                    
-                    customTasks.push(newTask);
                     saveCustomTasks();
-                    
-                    // Clear form
-                    document.getElementById('taskName').value = '';
-                    document.getElementById('taskTime').value = '';
-                    document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('selected'));
-                    selectedEmoji = '🌟';
-                    
-                    // Reset button
-                    btnText.innerHTML = '➕ Add Task';
-                    this.disabled = false;
-                    
                     renderCustomTasks();
                     renderChildTasks();
                     updateProgress();
-                }, 500);
+                }
             });
+        });
+    }
+    
+    // Render Custom Tasks in Child View
+    function renderChildTasks() {
+        const schoolContainer = document.getElementById('customSchoolTasks');
+        const weekendContainer = document.getElementById('customWeekendTasks');
+        const bothContainer = document.getElementById('customBothTasks');
+        const bothSection = document.getElementById('customBothSection');
+        
+        if (schoolContainer) schoolContainer.innerHTML = '';
+        if (weekendContainer) weekendContainer.innerHTML = '';
+        if (bothContainer) bothContainer.innerHTML = '';
+        
+        let hasBothTasks = false;
+        
+        customTasks.forEach(function(task) {
+            if (task.type === 'schoolday' && schoolContainer) {
+                schoolContainer.innerHTML += createTaskHTML(task, 'school');
+            } else if (task.type === 'weekend' && weekendContainer) {
+                weekendContainer.innerHTML += createTaskHTML(task, 'weekend');
+            } else if (task.type === 'both' && bothContainer) {
+                bothContainer.innerHTML += createTaskHTML(task, 'both');
+                hasBothTasks = true;
+            }
+        });
+        
+        if (bothSection) {
+            bothSection.style.display = hasBothTasks ? 'block' : 'none';
+        }
+    }
+    
+    // Add Task
+    const addTaskBtn = document.getElementById('addTaskBtn');
+    if (addTaskBtn) {
+        addTaskBtn.addEventListener('click', function() {
+            const taskNameInput = document.getElementById('taskName');
+            const taskTimeInput = document.getElementById('taskTime');
+            const taskTypeSelect = document.getElementById('taskType');
+            const taskCategorySelect = document.getElementById('taskCategory');
+            const btnText = this.querySelector('.btn-text');
             
-            // Update Progress
-            function updateProgress() {
-                // School progress
-                const schoolCheckboxes = document.querySelectorAll('#schoolTasksContainer .checkbox, #customSchoolTasks .checkbox');
-                const schoolChecked = document.querySelectorAll('#schoolTasksContainer .checkbox:checked, #customSchoolTasks .checkbox:checked');
-                const schoolPercentage = schoolCheckboxes.length > 0 ? Math.round((schoolChecked.length / schoolCheckboxes.length) * 100) : 0;
+            if (!taskNameInput || !taskNameInput.value.trim()) {
+                alert('Please enter a task name!');
+                return;
+            }
+            
+            // Loading state
+            if (btnText) {
+                btnText.innerHTML = '<span class="loading"></span> Adding...';
+            }
+            this.disabled = true;
+            
+            const self = this;
+            setTimeout(function() {
+                const newTask = {
+                    id: Date.now(),
+                    name: taskNameInput.value.trim(),
+                    time: taskTimeInput ? (taskTimeInput.value.trim() || 'Anytime') : 'Anytime',
+                    type: taskTypeSelect ? taskTypeSelect.value : 'schoolday',
+                    category: taskCategorySelect ? taskCategorySelect.value : 'anytime',
+                    emoji: selectedEmoji
+                };
                 
-                document.getElementById('schoolPercentage').textContent = schoolPercentage + '%';
-                document.getElementById('schoolProgressFill').style.width = schoolPercentage + '%';
+                customTasks.push(newTask);
+                saveCustomTasks();
                 
-                // Weekend progress
-                const weekendCheckboxes = document.querySelectorAll('#weekendTasksContainer .checkbox, #customWeekendTasks .checkbox');
-                const weekendChecked = document.querySelectorAll('#weekendTasksContainer .checkbox:checked, #customWeekendTasks .checkbox:checked');
+                // Clear form
+                if (taskNameInput) taskNameInput.value = '';
+                if (taskTimeInput) taskTimeInput.value = '';
+                document.querySelectorAll('.emoji-btn').forEach(function(b) {
+                    b.classList.remove('selected');
+                });
+                selectedEmoji = '🌟';
+                
+                // Reset button
+                if (btnText) {
+                    btnText.innerHTML = '➕ Add Task';
+                }
+                self.disabled = false;
+                
+                renderCustomTasks();
+                renderChildTasks();
+                updateProgress();
+            }, 500);
+        });
+    }
+    
+    // Update Progress
+    function updateProgress() {
+        // School progress
+        const schoolCheckboxes = document.querySelectorAll('#schoolTasksContainer .checkbox, #customSchoolTasks .checkbox');
+        const schoolChecked = document.querySelectorAll('#schoolTasksContainer .checkbox:checked, #customSchoolTasks .checkbox:checked');
+        const schoolPercentage = schoolCheckboxes.length > 0 ? Math.round((schoolChecked.length / schoolCheckboxes.length) * 100) : 0;
+        
+        const schoolPercentageEl = document.getElementById('schoolPercentage');
+        const schoolProgressFill = document.getElementById('schoolProgressFill');
+        if (schoolPercentageEl) schoolPercentageEl.textContent = schoolPercentage + '%';
+        if (schoolProgressFill) schoolProgressFill.style.width = schoolPercentage + '%';
+        
+        // Weekend progress
+        const weekendCheckboxes = document.querySelectorAll('#weekendTasksContainer .checkbox, #customWeekendTasks .checkbox');
+        const weekendChecked = document.querySelectorAll('#weekendTasksContainer .checkbox:checked, #customWeekendTasks .checkbox:checked');
+        const weekendPercentage = weekendCheckboxes.length > 0 ? Math.round((weekendChecked.length / weekendCheckboxes.length) * 100) : 0;
+        
+        const weekendPercentageEl = document.getElementById('weekendPercentage');
+        const weekendProgressFill = document.getElementById('weekendProgressFill');
+        if (weekendPercentageEl) weekendPercentageEl.textContent = weekendPercentage + '%';
+        if (weekendProgressFill) weekendProgressFill.style.width = weekendPercentage + '%';
+        
+        // Both tasks progress
+        const bothCheckboxes = document.querySelectorAll('#customBothTasks .checkbox');
+        if (bothCheckboxes.length > 0) {
+            const bothChecked = document.querySelectorAll('#customBothTasks .checkbox:checked');
+            const bothPercentage = Math.round((bothChecked.length / bothCheckboxes.length) * 100);
+            const bothPercentageEl = document.getElementById('bothPercentage');
+            const bothProgressFill = document.getElementById('bothProgressFill');
+            if (bothPercentageEl) bothPercentageEl.textContent = bothPercentage + '%';
+            if (bothProgressFill) bothProgressFill.style.width = bothPercentage + '%';
+        }
+    }
+    
+    // Achievement Celebration
+    function showAchievement(emoji) {
+        const modal = document.getElementById('achievementModal');
+        const emojiElement = document.getElementById('achievementEmoji');
+        
+        if (modal && emojiElement) {
+            emojiElement.textContent = emoji;
+            modal.classList.add('show');
+            
+            setTimeout(function() {
+                modal.classList.remove('show');
+            }, 2000);
+        }
+    }
+    
+    // Checkbox Events
+    document.addEventListener('change', function(e) {
+        if (e.target.classList.contains('checkbox')) {
+            const dayCheckbox = e.target.closest('.day-checkbox');
+            const taskCard = e.target.closest('.task-card');
+            
+            if (e.target.checked) {
+                if (dayCheckbox) dayCheckbox.classList.add('completed');
+                
+                // Check if all checkboxes completed
+                if (taskCard) {
+                    const allCheckboxes = taskCard.querySelectorAll('.checkbox');
+                    const checkedBoxes = taskCard.querySelectorAll('.checkbox:checked');
+                    
+                    if (allCheckboxes.length === checkedBoxes.length) {
+                        const emoji = taskCard.querySelector('.task-emoji');
+                        const emojiText = emoji ? emoji.textContent : '🎉';
+                        
+                        // Animate emoji
+                        if (emoji) {
+                            emoji.style.transform = 'scale(1.5) rotate(360deg)';
+                            setTimeout(function() {
+                                emoji.style.transform = 'scale(1) rotate(0deg)';
+                            }, 600);
+                        }
+                        
+                        // Show celebration
+                        setTimeout(function() {
+                            showAchievement(emojiText);
+                        }, 300);
+                    }
+                }
+            } else {
+                if (dayCheckbox) dayCheckbox.classList.remove('completed');
+            }
+            
+            updateProgress();
+        }
+    });
+    
+    // Initialize
+    loadCustomTasks();
+    renderAllTasks();
+    updateProgress();
+    attachEmojiListeners();
+    switchToChildMode();
+});
+</script>
+</body>
+</html>dTasksContainer .checkbox:checked, #customWeekendTasks .checkbox:checked');
                 const weekendPercentage = weekendCheckboxes.length > 0 ? Math.round((weekendChecked.length / weekendCheckboxes.length) * 100) : 0;
                 
                 document.getElementById('weekendPercentage').textContent = weekendPercentage + '%';
@@ -1115,7 +1221,7 @@
             attachEmojiListeners();
             switchToChildMode();
         });
-    </script>
+</script>
 </body>
 </html>" },
                 { name: "Shower Time", time: "Evening - Get clean and cozy", emoji: "🚿", category: "evening" }
