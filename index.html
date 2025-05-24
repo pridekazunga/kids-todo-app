@@ -6,340 +6,681 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="My Todo List">
-    <meta name="theme-color" content="#ff6b9d">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📝</text></svg>">
-    <title>My Weekly To-Do List</title>
+    <meta name="apple-mobile-web-app-title" content="FamilyFlow">
+    <meta name="theme-color" content="#667eea">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✨</text></svg>">
+    <title>FamilyFlow - Smart Family Task Manager</title>
     <style>
-        body {
-            font-family: 'Comic Sans MS', cursive, sans-serif;
-            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+        /* Design System & CSS Variables */
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            --warm-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fad0c4 100%);
+            
+            /* Glassmorphism */
+            --glass-bg: rgba(255, 255, 255, 0.25);
+            --glass-border: rgba(255, 255, 255, 0.18);
+            --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            --glass-blur: blur(20px);
+            
+            /* 3D Effects */
+            --shadow-soft: 0 4px 15px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 8px 25px rgba(0, 0, 0, 0.15);
+            --shadow-strong: 0 15px 35px rgba(0, 0, 0, 0.2);
+            --shadow-glow: 0 0 20px rgba(102, 126, 234, 0.3);
+            
+            /* Animation Curves */
+            --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            --ease-smooth: cubic-bezier(0.4, 0.0, 0.2, 1);
+            --ease-quick: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            
+            /* Light Mode Colors */
+            --bg-primary: #667eea;
+            --bg-secondary: #764ba2;
+            --text-primary: #2d3748;
+            --text-secondary: #4a5568;
+            --text-muted: #718096;
+            --surface-primary: rgba(255, 255, 255, 0.9);
+            --surface-secondary: rgba(255, 255, 255, 0.7);
+            --border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Dark Mode Variables */
+        [data-theme="dark"] {
+            --bg-primary: #1a202c;
+            --bg-secondary: #2d3748;
+            --text-primary: #f7fafc;
+            --text-secondary: #e2e8f0;
+            --text-muted: #a0aec0;
+            --surface-primary: rgba(45, 55, 72, 0.9);
+            --surface-secondary: rgba(26, 32, 44, 0.8);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --glass-bg: rgba(45, 55, 72, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
             margin: 0;
             padding: 0;
-            min-height: 100vh;
+            box-sizing: border-box;
         }
-        
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--warm-gradient);
+            min-height: 100vh;
+            color: var(--text-primary);
+            transition: all 0.3s var(--ease-smooth);
+            overflow-x: hidden;
+        }
+
+        [data-theme="dark"] body {
+            background: linear-gradient(135deg, #1a202c 0%, #2d3748 50%, #4a5568 100%);
+        }
+
+        /* Glassmorphism Header */
         .header {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 15px;
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            padding: 20px;
             text-align: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: var(--glass-shadow);
             position: sticky;
             top: 0;
             z-index: 100;
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 20px;
         }
-        
+
+        .header-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 800px;
+            margin: 0 auto 15px;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            padding: 8px;
+            cursor: pointer;
+            transition: all 0.3s var(--ease-smooth);
+            backdrop-filter: var(--glass-blur);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .theme-icon {
+            font-size: 1.2em;
+            transition: transform 0.3s var(--ease-bounce);
+        }
+
+        .theme-toggle:hover .theme-icon {
+            transform: rotate(20deg) scale(1.1);
+        }
+
+        /* Mode Toggle Buttons */
         .mode-toggle {
             display: flex;
+            gap: 10px;
             justify-content: center;
-            gap: 10px;
-            margin-bottom: 10px;
         }
-        
+
         .mode-btn {
-            padding: 10px 20px;
+            padding: 12px 24px;
             border: none;
-            border-radius: 25px;
+            border-radius: 50px;
             font-family: inherit;
-            font-weight: bold;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s var(--ease-smooth);
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            color: var(--text-secondary);
+            position: relative;
+            overflow: hidden;
         }
-        
+
+        .mode-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: var(--primary-gradient);
+            border-radius: 50%;
+            transition: all 0.4s var(--ease-smooth);
+            transform: translate(-50%, -50%);
+            z-index: -1;
+        }
+
+        .mode-btn:hover::before {
+            width: 200%;
+            height: 200%;
+        }
+
         .mode-btn.active {
-            background: #ff6b9d;
+            background: var(--primary-gradient);
             color: white;
-            transform: scale(1.05);
-        }
-        
-        .mode-btn:not(.active) {
-            background: #f0f0f0;
-            color: #666;
-        }
-        
-        .app-title {
-            color: #ff1744;
-            font-size: 1.8em;
-            margin: 0;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-        }
-        
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        /* Parent Admin Panel Styles */
-        .admin-panel {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            border: 3px solid #ff6b9d;
-        }
-        
-        .admin-title {
-            color: #ff1744;
-            font-size: 1.5em;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        
-        .add-task-form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .form-row {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        
-        .form-input {
-            flex: 1;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-family: inherit;
-            font-size: 1em;
-            min-width: 200px;
-        }
-        
-        .form-select {
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-family: inherit;
-            font-size: 1em;
-            background: white;
-        }
-        
-        .emoji-picker {
-            display: flex;
-            gap: 5px;
-            flex-wrap: wrap;
-            margin: 10px 0;
-        }
-        
-        .emoji-btn {
-            padding: 8px;
-            border: 2px solid #ddd;
-            border-radius: 50%;
-            background: white;
-            font-size: 1.5em;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        
-        .emoji-btn:hover, .emoji-btn.selected {
-            border-color: #ff6b9d;
-            background: #ffe0e6;
-            transform: scale(1.1);
-        }
-        
-        .add-btn {
-            padding: 15px 30px;
-            background: #4caf50;
-            color: white;
-            border: none;
-            border-radius: 25px;
-            font-family: inherit;
-            font-size: 1.1em;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .add-btn:hover {
-            background: #45a049;
             transform: translateY(-2px);
+            box-shadow: var(--shadow-glow);
         }
-        
-        .custom-tasks {
-            margin-top: 20px;
-        }
-        
-        .custom-task-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px;
-            background: #f9f9f9;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            border-left: 4px solid #ff6b9d;
-        }
-        
-        .delete-btn {
-            background: #f44336;
+
+        .mode-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-medium);
             color: white;
-            border: none;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            cursor: pointer;
-            font-size: 1.2em;
         }
-        
-        /* Child View Styles */
-        .page {
-            background: white;
-            border-radius: 15px;
+
+        /* App Title with Animation */
+        .app-title {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 2.2em;
+            font-weight: 800;
+            margin: 0;
+            letter-spacing: -0.02em;
+            animation: titleGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes titleGlow {
+            0% { filter: drop-shadow(0 0 5px rgba(102, 126, 234, 0.3)); }
+            100% { filter: drop-shadow(0 0 15px rgba(102, 126, 234, 0.6)); }
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1em;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
+        }
+
+        /* Premium Card Design with 3D Effects */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--glass-shadow);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s var(--ease-smooth);
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s var(--ease-smooth);
+            opacity: 0;
+        }
+
+        .glass-card:hover::before {
+            animation: shimmer 1.5s ease-in-out;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); opacity: 0; }
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-strong), var(--shadow-glow);
+        }
+
+        /* Section Headers */
+        .section-header {
+            background: var(--primary-gradient);
+            color: white;
             padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            border: 3px solid;
-        }
-        
-        .school-day {
-            border-color: #2196f3;
-            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-        }
-        
-        .weekend {
-            border-color: #9c27b0;
-            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
-        }
-        
-        .custom-section {
-            border-color: #ff6b9d;
-            background: linear-gradient(135deg, #ffe0e6 0%, #ffcdd2 100%);
-        }
-        
-        .day-title {
-            font-size: 1.6em;
-            font-weight: bold;
-            margin-bottom: 15px;
+            border-radius: 16px;
             text-align: center;
+            margin-bottom: 25px;
+            font-size: 1.4em;
+            font-weight: 700;
+            box-shadow: var(--shadow-medium);
+            position: relative;
+            overflow: hidden;
         }
-        
-        .school-day .day-title {
-            color: #1976d2;
+
+        .section-header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: sweep 3s ease-in-out infinite;
         }
-        
-        .weekend .day-title {
-            color: #7b1fa2;
+
+        @keyframes sweep {
+            0% { left: -100%; }
+            100% { left: 100%; }
         }
-        
-        .custom-section .day-title {
-            color: #c2185b;
+
+        /* Enhanced Task Cards */
+        .task-card {
+            background: var(--surface-primary);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s var(--ease-smooth);
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
         }
-        
-        .task-item {
-            margin-bottom: 12px;
-            padding: 12px;
-            border-radius: 10px;
-            background: white;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            border-left: 4px solid;
+
+        .task-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+            transform: scaleX(0);
+            transition: transform 0.3s var(--ease-smooth);
+            transform-origin: left;
         }
-        
+
+        .task-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .task-card:hover {
+            transform: translateY(-3px) translateZ(10px);
+            box-shadow: var(--shadow-medium);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
         .task-header {
             display: flex;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            gap: 15px;
         }
-        
+
         .task-name {
             font-size: 1.1em;
-            font-weight: bold;
+            font-weight: 600;
+            color: var(--text-primary);
             flex-grow: 1;
         }
-        
+
         .task-time {
             font-size: 0.9em;
-            color: #666;
+            color: var(--text-muted);
             font-style: italic;
-            margin-right: 10px;
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
         }
-        
-        .emoji {
-            font-size: 1.8em;
-            transition: transform 0.3s ease;
+
+        /* Enhanced Emoji with Animations */
+        .task-emoji {
+            font-size: 2em;
+            transition: all 0.3s var(--ease-bounce);
+            cursor: pointer;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
         }
-        
+
+        .task-emoji:hover {
+            transform: scale(1.2) rotate(10deg);
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+        }
+
+        /* Animated Progress Indicators */
+        .progress-container {
+            margin-top: 15px;
+            padding: 15px;
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .progress-label {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .progress-percentage {
+            font-size: 0.8em;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--success-gradient);
+            border-radius: 10px;
+            transition: width 0.6s var(--ease-smooth);
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: progressShine 2s ease-in-out infinite;
+        }
+
+        @keyframes progressShine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Day Checkboxes with Enhanced Design */
         .day-checkboxes {
             display: flex;
             gap: 12px;
             flex-wrap: wrap;
-            margin-top: 8px;
             justify-content: center;
+            margin-top: 15px;
         }
-        
+
         .day-checkbox {
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-width: 55px;
-            transition: all 0.3s ease;
-            padding: 5px;
-            border-radius: 8px;
+            padding: 10px;
+            border-radius: 12px;
+            transition: all 0.3s var(--ease-smooth);
+            cursor: pointer;
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            min-width: 60px;
+            position: relative;
+            overflow: hidden;
         }
-        
+
+        .day-checkbox::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--success-gradient);
+            opacity: 0;
+            transition: all 0.3s var(--ease-smooth);
+            border-radius: 12px;
+        }
+
+        .day-checkbox.completed::before {
+            opacity: 0.2;
+        }
+
+        .day-checkbox:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: var(--shadow-medium);
+        }
+
         .day-label {
-            font-size: 0.85em;
-            font-weight: bold;
-            margin-bottom: 5px;
+            font-size: 0.8em;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--text-secondary);
+            z-index: 1;
+            position: relative;
         }
-        
-        .school-day .day-label {
-            color: #1976d2;
-        }
-        
-        .weekend .day-label, .custom-section .day-label {
-            color: #7b1fa2;
-        }
-        
+
         .checkbox {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            appearance: none;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--surface-secondary);
+            transition: all 0.3s var(--ease-bounce);
+            position: relative;
+            z-index: 1;
+        }
+
+        .checkbox:checked {
+            background: var(--success-gradient);
+            border-color: transparent;
+            transform: scale(1.1);
+        }
+
+        .checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        /* Achievement Celebration */
+        .achievement-celebration {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: var(--shadow-strong);
+            z-index: 1000;
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.8);
+            transition: all 0.4s var(--ease-bounce);
+        }
+
+        .achievement-celebration.show {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .achievement-emoji {
+            font-size: 4em;
+            animation: bounce 0.6s var(--ease-bounce);
+        }
+
+        @keyframes bounce {
+            0%, 20%, 53%, 80%, 100% { transform: translateY(0); }
+            40%, 43% { transform: translateY(-20px); }
+            70% { transform: translateY(-10px); }
+            90% { transform: translateY(-4px); }
+        }
+
+        /* Admin Panel Enhancements */
+        .admin-panel {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--glass-shadow);
+        }
+
+        .form-input, .form-select {
+            background: var(--surface-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-family: inherit;
+            font-size: 1em;
+            transition: all 0.3s var(--ease-smooth);
+            color: var(--text-primary);
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: rgba(102, 126, 234, 0.5);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .emoji-picker {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+
+        .emoji-btn {
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--surface-primary);
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: all 0.3s var(--ease-bounce);
+        }
+
+        .emoji-btn:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .emoji-btn.selected {
+            border-color: rgba(102, 126, 234, 0.7);
+            background: var(--glass-bg);
+            transform: scale(1.1);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .add-btn {
+            background: var(--success-gradient);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 15px 30px;
+            font-family: inherit;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s var(--ease-smooth);
+            box-shadow: var(--shadow-medium);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .add-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transition: all 0.4s var(--ease-smooth);
+            transform: translate(-50%, -50%);
+        }
+
+        .add-btn:hover::before {
+            width: 200%;
+            height: 200%;
+        }
+
+        .add-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-strong);
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
             width: 20px;
             height: 20px;
-            cursor: pointer;
-            transform: scale(1.3);
-            -webkit-tap-highlight-color: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
         }
-        
-        /* Color coding */
-        .morning { border-left-color: #ff9800; }
-        .afternoon { border-left-color: #4caf50; }
-        .evening { border-left-color: #673ab7; }
-        .anytime { border-left-color: #e91e63; }
-        .custom { border-left-color: #ff6b9d; }
-        
-        .note {
-            background: #fff3e0;
-            border: 2px dashed #ff9800;
-            border-radius: 10px;
-            padding: 12px;
-            margin-top: 15px;
-            text-align: center;
-            color: #e65100;
-            font-weight: bold;
-            font-size: 0.95em;
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
-        
-        .hidden {
-            display: none;
-        }
-        
-        /* Mobile Optimization */
-        @media screen and (max-width: 768px) {
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
             .container {
-                padding: 10px;
+                padding: 0 15px 30px;
             }
             
-            .form-row {
-                flex-direction: column;
-                align-items: stretch;
+            .glass-card {
+                padding: 20px;
+                border-radius: 16px;
             }
             
-            .form-input, .form-select {
-                min-width: auto;
+            .app-title {
+                font-size: 1.8em;
+            }
+            
+            .mode-btn {
+                padding: 10px 18px;
+                font-size: 0.9em;
+            }
+            
+            .task-card {
+                padding: 15px;
             }
             
             .day-checkboxes {
@@ -347,54 +688,65 @@
             }
             
             .day-checkbox {
-                min-width: 45px;
+                min-width: 50px;
+                padding: 8px;
             }
-            
-            .checkbox {
-                width: 22px;
-                height: 22px;
-            }
-            
-            .app-title {
-                font-size: 1.5em;
-            }
-            
-            .mode-btn {
-                padding: 8px 16px;
-                font-size: 0.9em;
-            }
+        }
+
+        /* Hidden class */
+        .hidden {
+            display: none;
+        }
+
+        /* Fade animations */
+        .fade-in {
+            animation: fadeIn 0.5s var(--ease-smooth);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <div class="mode-toggle">
-            <button class="mode-btn" id="childMode">👧 Child View</button>
-            <button class="mode-btn" id="parentMode">👨‍👩‍👧 Parent Panel</button>
+        <div class="header-controls">
+            <div class="theme-toggle" id="themeToggle">
+                <span class="theme-icon">🌙</span>
+                <span class="theme-text">Dark</span>
+            </div>
+            <div class="mode-toggle">
+                <button class="mode-btn active" id="childMode">👧 Child View</button>
+                <button class="mode-btn" id="parentMode">👨‍👩‍👧 Parent Panel</button>
+            </div>
         </div>
-        <h1 class="app-title">🌟 My Weekly To-Do List 🌟</h1>
+        <h1 class="app-title">✨ FamilyFlow</h1>
+        <p class="subtitle">Smart Family Task Management</p>
     </div>
     
     <div class="container">
         <!-- Parent Admin Panel -->
         <div id="adminPanel" class="hidden">
-            <div class="admin-panel">
-                <h2 class="admin-title">👨‍👩‍👧 Add Custom Tasks</h2>
+            <div class="glass-card admin-panel">
+                <div class="section-header">
+                    👨‍👩‍👧 Add Custom Tasks
+                </div>
                 
                 <div class="add-task-form">
-                    <div class="form-row">
-                        <input type="text" id="taskName" class="form-input" placeholder="Task name (e.g., Water plants)" maxlength="50">
-                        <input type="text" id="taskTime" class="form-input" placeholder="Time/note (e.g., After dinner)" maxlength="30">
+                    <div class="form-row" style="display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap;">
+                        <input type="text" id="taskName" class="form-input" placeholder="Task name (e.g., Water plants)" maxlength="50" style="flex: 1; min-width: 200px;">
+                        <input type="text" id="taskTime" class="form-input" placeholder="Time/note (e.g., After dinner)" maxlength="30" style="flex: 1; min-width: 200px;">
                     </div>
                     
-                    <div class="form-row">
-                        <select id="taskType" class="form-select">
+                    <div class="form-row" style="display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap;">
+                        <select id="taskType" class="form-select" style="flex: 1;">
                             <option value="schoolday">School Days (Mon-Fri)</option>
                             <option value="weekend">Weekends (Sat-Sun)</option>
                             <option value="both">Both School Days & Weekends</option>
                         </select>
                         
-                        <select id="taskCategory" class="form-select">
+                        <select id="taskCategory" class="form-select" style="flex: 1;">
                             <option value="morning">Morning</option>
                             <option value="afternoon">Afternoon</option>
                             <option value="evening">Evening</option>
@@ -403,7 +755,7 @@
                     </div>
                     
                     <div>
-                        <label style="font-weight: bold; margin-bottom: 10px; display: block;">Choose an emoji:</label>
+                        <label style="font-weight: 600; margin-bottom: 10px; display: block; color: var(--text-secondary);">Choose an emoji:</label>
                         <div class="emoji-picker">
                             <div class="emoji-btn" data-emoji="🌟">🌟</div>
                             <div class="emoji-btn" data-emoji="🎯">🎯</div>
@@ -420,381 +772,68 @@
                         </div>
                     </div>
                     
-                    <button class="add-btn" id="addTaskBtn">➕ Add Task</button>
+                    <button class="add-btn" id="addTaskBtn">
+                        <span class="btn-text">➕ Add Task</span>
+                    </button>
                 </div>
                 
                 <div class="custom-tasks" id="customTasksList">
-                    <h3 style="color: #ff1744; margin-bottom: 15px;">📝 Your Custom Tasks:</h3>
+                    <h3 style="color: var(--text-primary); margin-bottom: 15px; font-weight: 600;">📝 Your Custom Tasks:</h3>
                     <div id="customTasksContainer"></div>
                 </div>
             </div>
         </div>
         
         <!-- Child View -->
-        <div id="childView">
+        <div id="childView" class="fade-in">
             <!-- School Days Section -->
-            <div class="page school-day">
-                <div class="day-title">📚 School Days (Monday - Friday) 📚</div>
+            <div class="glass-card">
+                <div class="section-header">
+                    📚 School Days (Monday - Friday)
+                </div>
                 
-                <div class="task-item morning">
-                    <div class="task-header">
-                        <div class="task-name">Make My Bed</div>
-                        <div class="task-time">7:00 AM - Right after waking up</div>
-                        <div class="emoji">🛏️</div>
+                <div class="progress-container" id="schoolProgress">
+                    <div class="progress-header">
+                        <span class="progress-label">Weekly Progress</span>
+                        <span class="progress-percentage" id="schoolPercentage">0%</span>
                     </div>
-                    <div class="day-checkboxes">
-                        <div class="day-checkbox">
-                            <div class="day-label">MON</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">TUE</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">WED</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">THU</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">FRI</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="schoolProgressFill" style="width: 0%"></div>
                     </div>
                 </div>
                 
-                <div class="task-item morning">
-                    <div class="task-header">
-                        <div class="task-name">Take Out Lunchbox from School Bag</div>
-                        <div class="task-time">7:05 AM - Get ready for the day</div>
-                        <div class="emoji">🎒</div>
-                    </div>
-                    <div class="day-checkboxes">
-                        <div class="day-checkbox">
-                            <div class="day-label">MON</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">TUE</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">WED</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">THU</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">FRI</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                    </div>
+                <div id="schoolTasksContainer">
+                    <!-- Default school tasks will be inserted here -->
                 </div>
                 
-                <div class="task-item afternoon">
-                    <div class="task-header">
-                        <div class="task-name">Homework Time</div>
-                        <div class="task-time">After school - 30 minutes</div>
-                        <div class="emoji">📝</div>
-                    </div>
-                    <div class="day-checkboxes">
-                        <div class="day-checkbox">
-                            <div class="day-label">MON</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">TUE</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">WED</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">THU</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">FRI</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="task-item afternoon">
-                    <div class="task-header">
-                        <div class="task-name">Violin Practice</div>
-                        <div class="task-time">After homework - 20 minutes</div>
-                        <div class="emoji">🎻</div>
-                    </div>
-                    <div class="day-checkboxes">
-                        <div class="day-checkbox">
-                            <div class="day-label">MON</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">TUE</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">WED</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">THU</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">FRI</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="task-item afternoon">
-                    <div class="task-header">
-                        <div class="task-name">Play Time</div>
-                        <div class="task-time">Free time - Have fun!</div>
-                        <div class="emoji">🎮</div>
-                    </div>
-                    <div class="day-checkboxes">
-                        <div class="day-checkbox">
-                            <div class="day-label">MON</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">TUE</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">WED</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">THU</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">FRI</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="task-item anytime">
-                    <div class="task-header">
-                        <div class="task-name">Reading Time</div>
-                        <div class="task-time">Anytime - 20 minutes</div>
-                        <div class="emoji">📚</div>
-                    </div>
-                    <div class="day-checkboxes">
-                        <div class="day-checkbox">
-                            <div class="day-label">MON</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">TUE</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">WED</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">THU</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">FRI</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="task-item anytime">
-                    <div class="task-header">
-                        <div class="task-name">Drawing or Writing</div>
-                        <div class="task-time">When I feel creative!</div>
-                        <div class="emoji">🎨</div>
-                    </div>
-                    <div class="day-checkboxes">
-                        <div class="day-checkbox">
-                            <div class="day-label">MON</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">TUE</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">WED</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">THU</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">FRI</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="task-item evening">
-                    <div class="task-header">
-                        <div class="task-name">Pack Lunch and School Bag</div>
-                        <div class="task-time">Evening - Get ready for tomorrow</div>
-                        <div class="emoji">🥪</div>
-                    </div>
-                    <div class="day-checkboxes">
-                        <div class="day-checkbox">
-                            <div class="day-label">MON</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">TUE</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">WED</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">THU</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">FRI</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="task-item evening">
-                    <div class="task-header">
-                        <div class="task-name">Clean My Room</div>
-                        <div class="task-time">Before dinner - 15 minutes</div>
-                        <div class="emoji">🧹</div>
-                    </div>
-                    <div class="day-checkboxes">
-                        <div class="day-checkbox">
-                            <div class="day-label">MON</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">TUE</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">WED</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">THU</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">FRI</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="task-item evening">
-                    <div class="task-header">
-                        <div class="task-name">Shower Time</div>
-                        <div class="task-time">Evening - Get clean and cozy</div>
-                        <div class="emoji">🚿</div>
-                    </div>
-                    <div class="day-checkboxes">
-                        <div class="day-checkbox">
-                            <div class="day-label">MON</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">TUE</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">WED</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">THU</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">FRI</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Custom School Day Tasks will be inserted here -->
+                <!-- Custom School Day Tasks -->
                 <div id="customSchoolTasks"></div>
-                
-                <div class="note">
-                    🌟 Check off each school day as you complete your tasks! 🌟<br>
-                    Try to get all 5 checkboxes for each task! 💪
-                </div>
             </div>
             
             <!-- Weekend Section -->
-            <div class="page weekend">
-                <div class="day-title">🎉 Weekends (Saturday & Sunday) 🎉</div>
+            <div class="glass-card">
+                <div class="section-header" style="background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);">
+                    🎉 Weekends (Saturday & Sunday)
+                </div>
                 
-                <div class="task-item morning">
-                    <div class="task-header">
-                        <div class="task-name">Make My Bed</div>
-                        <div class="task-time">7:00 AM - Start the day right</div>
-                        <div class="emoji">🛏️</div>
+                <div class="progress-container" id="weekendProgress">
+                    <div class="progress-header">
+                        <span class="progress-label">Weekend Progress</span>
+                        <span class="progress-percentage" id="weekendPercentage">0%</span>
                     </div>
-                    <div class="day-checkboxes">
-                        <div class="day-checkbox">
-                            <div class="day-label">SAT</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">SUN</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="weekendProgressFill" style="width: 0%"></div>
                     </div>
                 </div>
                 
-                <div class="task-item anytime">
-                    <div class="task-header">
-                        <div class="task-name">Violin Practice</div>
-                        <div class="task-time">Anytime - 20 minutes</div>
-                        <div class="emoji">🎻</div>
-                    </div>
-                    <div class="day-checkboxes">
-                        <div class="day-checkbox">
-                            <div class="day-label">SAT</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label">SUN</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                    </div>
+                <div id="weekendTasksContainer">
+                    <!-- Default weekend tasks will be inserted here -->
                 </div>
                 
-                <div class="task-item anytime">
-                    <div class="task-header">
-                        <div class="task-name">Extra Play Time</div>
-                        <div class="task-time">More fun time on weekends!</div>
-                        <div class="emoji">🎈</div>
-                    </div>
-                    <div class="day-checkboxes">
-                        <div class="day-checkbox">
-                            <div class="day-label">SAT</div>
-                            <input type="checkbox" class="checkbox">
-                        </div>
-                        <div class="day-checkbox">
-                            <div class="day-label
+                <!-- Custom Weekend Tasks -->
+                <div id="customWeekendTasks"></div>
+            </div>
+            
+            <!-- Custom Tasks Section (for tasks that appear on both school days and weekends) -->
+            <div class="glass-card custom-section" id="customBothSection" style="display: none;">
+                <div class="section-header"
