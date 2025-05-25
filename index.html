@@ -755,34 +755,6 @@
         document.addEventListener('DOMContentLoaded', function() {
             // App State
             let selectedEmoji = '🌟';
-            let customTasks = [];
-            
-            // Default Tasks
-            const defaultSchoolTasks = [
-                { name: "Make My Bed", time: "7:00 AM - Right after waking up", emoji: "🛏️", category: "morning" },
-                { name: "Take Out Lunchbox from School Bag", time: "7:05 AM - Get ready for the day", emoji: "🎒", category: "morning" },
-                { name: "Homework Time", time: "After school - 30 minutes", emoji: "📝", category: "afternoon" },
-                { name: "Violin Practice", time: "After homework - 20 minutes", emoji: "🎻", category: "afternoon" },
-                { name: "Play Time", time: "Free time - Have fun!", emoji: "🎮", category: "afternoon" },
-                { name: "Reading Time", time: "Anytime - 20 minutes", emoji: "📚", category: "anytime" },
-                { name: "Drawing or Writing", time: "When I feel creative!", emoji: "🎨", category: "anytime" },
-                { name: "Pack Lunch and School Bag", time: "Evening - Get ready for tomorrow", emoji: "🥪", category: "evening" },
-                { name: "Clean My Room", time: "Before dinner - 15 minutes", emoji: "🧹", category: "evening" },
-                { name: "Brush Your Teeth", time: "Morning & Evening - Keep them sparkly!", emoji: "🦷", category: "evening" },
-    </div>
-    
-    <!-- Achievement Modal -->
-    <div class="achievement-celebration" id="achievementModal">
-        <div class="achievement-emoji" id="achievementEmoji">🎉</div>
-        <h3 style="color: var(--text-primary); margin: 15px 0 5px; font-weight: 700;">Awesome Job!</h3>
-        <p style="color: var(--text-muted); margin: 0;">You completed all days for this task!</p>
-    </div>
-
-<script>
-// Wait for DOM to be ready
-document.addEventListener('DOMContentLoaded', function() {
-    // App State
-    let selectedEmoji = '🌟';
     let customTasks = [];
     
     // Default Tasks
@@ -796,22 +768,35 @@ document.addEventListener('DOMContentLoaded', function() {
         { name: "Drawing or Writing", time: "When I feel creative!", emoji: "🎨", category: "anytime" },
         { name: "Pack Lunch and School Bag", time: "Evening - Get ready for tomorrow", emoji: "🥪", category: "evening" },
         { name: "Clean My Room", time: "Before dinner - 15 minutes", emoji: "🧹", category: "evening" },
-        { name: "Brush Your Teeth", time: "Morning & Evening - Keep them sparkly!", emoji: "🦷", category: "evening" },
-        { name: "Shower Time", time: "Evening - Get clean and cozy", emoji: "🚿", category: "evening" }
-    ];
-    
-    const defaultWeekendTasks = [
-        { name: "Make My Bed", time: "7:00 AM - Start the day right", emoji: "🛏️", category: "morning" },
-        { name: "Violin Practice", time: "Anytime - 20 minutes", emoji: "🎻", category: "anytime" },
-        { name: "Extra Play Time", time: "More fun time on weekends!", emoji: "🎈", category: "anytime" },
-        { name: "Reading Adventure", time: "Longer reading time - 30 minutes", emoji: "📖", category: "anytime" },
-        { name: "Creative Time", time: "Drawing, writing, or crafts!", emoji: "✨", category: "anytime" },
-        { name: "Clean My Room", time: "Afternoon - Keep it tidy", emoji: "🧹", category: "afternoon" },
-        { name: "Brush Your Teeth", time: "Morning & Evening - Keep them sparkly!", emoji: "🦷", category: "evening" },
-        { name: "Shower Time", time: "Evening - Stay fresh", emoji: "🛁", category: "evening" }
-    ];
-    
-    // Storage Functions
+            customTasks = [];
+            
+            // Default Tasks
+            const defaultSchoolTasks = [
+                { name: "Make My Bed", time: "7:00 AM - Right after waking up", emoji: "🛏️", category: "morning" },
+                { name: "Take Out Lunchbox from School Bag", time: "7:05 AM - Get ready for the day", emoji: "🎒", category: "morning" },
+                { name: "Homework Time", time: "After school - 30 minutes", emoji: "📝", category: "afternoon" },
+                { name: "Violin Practice", time: "After homework - 20 minutes", emoji: "🎻", category: "afternoon" },
+                { name: "Play Time", time: "Free time - Have fun!", emoji: "🎮", category: "afternoon" },
+                { name: "Reading Time", time: "Anytime - 20 minutes", emoji: "📚", category: "anytime" },
+                { name: "Drawing or Writing", time: "When I feel creative!", emoji: "🎨", category: "anytime" },
+                { name: "Pack Lunch and School Bag", time: "Evening - Get ready for tomorrow", emoji: "🥪", category: "evening" },
+                { name: "Clean My Room", time: "Before dinner - 15 minutes", emoji: "🧹", category: "evening" },
+                { name: "Brush Your Teeth", time: "Morning & Evening - Keep them sparkly!", emoji: "🦷", category: "evening" },
+                { name: "Shower Time", time: "Evening - Get clean and cozy", emoji: "🚿", category: "evening" }
+            ];
+            
+            const defaultWeekendTasks = [
+                { name: "Make My Bed", time: "7:00 AM - Start the day right", emoji: "🛏️", category: "morning" },
+                { name: "Violin Practice", time: "Anytime - 20 minutes", emoji: "🎻", category: "anytime" },
+                { name: "Extra Play Time", time: "More fun time on weekends!", emoji: "🎈", category: "anytime" },
+                { name: "Reading Adventure", time: "Longer reading time - 30 minutes", emoji: "📖", category: "anytime" },
+                { name: "Creative Time", time: "Drawing, writing, or crafts!", emoji: "✨", category: "anytime" },
+                { name: "Clean My Room", time: "Afternoon - Keep it tidy", emoji: "🧹", category: "afternoon" },
+                { name: "Brush Your Teeth", time: "Morning & Evening - Keep them sparkly!", emoji: "🦷", category: "evening" },
+                { name: "Shower Time", time: "Evening - Stay fresh", emoji: "🛁", category: "evening" }
+            ];
+            
+            // Storage Functions
     function saveCustomTasks() {
         try {
             localStorage.setItem('customTasks', JSON.stringify(customTasks));
@@ -1151,87 +1136,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 </body>
-</html>dTasksContainer .checkbox:checked, #customWeekendTasks .checkbox:checked');
-                const weekendPercentage = weekendCheckboxes.length > 0 ? Math.round((weekendChecked.length / weekendCheckboxes.length) * 100) : 0;
-                
-                document.getElementById('weekendPercentage').textContent = weekendPercentage + '%';
-                document.getElementById('weekendProgressFill').style.width = weekendPercentage + '%';
-                
-                // Both tasks progress
-                const bothCheckboxes = document.querySelectorAll('#customBothTasks .checkbox');
-                if (bothCheckboxes.length > 0) {
-                    const bothChecked = document.querySelectorAll('#customBothTasks .checkbox:checked');
-                    const bothPercentage = Math.round((bothChecked.length / bothCheckboxes.length) * 100);
-                    document.getElementById('bothPercentage').textContent = bothPercentage + '%';
-                    document.getElementById('bothProgressFill').style.width = bothPercentage + '%';
-                }
-            }
-            
-            // Achievement Celebration
-            function showAchievement(emoji) {
-                const modal = document.getElementById('achievementModal');
-                const emojiElement = document.getElementById('achievementEmoji');
-                
-                emojiElement.textContent = emoji;
-                modal.classList.add('show');
-                
-                setTimeout(() => {
-                    modal.classList.remove('show');
-                }, 2000);
-            }
-            
-            // Checkbox Events
-            document.addEventListener('change', function(e) {
-                if (e.target.classList.contains('checkbox')) {
-                    const dayCheckbox = e.target.closest('.day-checkbox');
-                    const taskCard = e.target.closest('.task-card');
-                    
-                    if (e.target.checked) {
-                        dayCheckbox.classList.add('completed');
-                        
-                        // Check if all checkboxes completed
-                        const allCheckboxes = taskCard.querySelectorAll('.checkbox');
-                        const checkedBoxes = taskCard.querySelectorAll('.checkbox:checked');
-                        
-                        if (allCheckboxes.length === checkedBoxes.length) {
-                            const emoji = taskCard.querySelector('.task-emoji');
-                            const emojiText = emoji.textContent;
-                            
-                            // Animate emoji
-                            emoji.style.transform = 'scale(1.5) rotate(360deg)';
-                            setTimeout(() => {
-                                emoji.style.transform = 'scale(1) rotate(0deg)';
-                            }, 600);
-                            
-                            // Show celebration
-                            setTimeout(() => showAchievement(emojiText), 300);
-                        }
-                    } else {
-                        dayCheckbox.classList.remove('completed');
-                    }
-                    
-                    updateProgress();
-                }
-            });
-            
-            // Initialize
-            loadCustomTasks();
-            renderAllTasks();
-            updateProgress();
-            attachEmojiListeners();
-            switchToChildMode();
-        });
-</script>
-</body>
-</html>" },
-                { name: "Shower Time", time: "Evening - Get clean and cozy", emoji: "🚿", category: "evening" }
-            ];
-            
-            const defaultWeekendTasks = [
-                { name: "Make My Bed", time: "7:00 AM - Start the day right", emoji: "🛏️", category: "morning" },
-                { name: "Violin Practice", time: "Anytime - 20 minutes", emoji: "🎻", category: "anytime" },
-                { name: "Extra Play Time", time: "More fun time on weekends!", emoji: "🎈", category: "anytime" },
-                { name: "Reading Adventure", time: "Longer reading time - 30 minutes", emoji: "📖", category: "anytime" },
-                { name: "Creative Time", time: "Drawing, writing, or crafts!", emoji: "✨", category: "anytime" },
-                { name: "Clean My Room", time: "Afternoon - Keep it tidy", emoji: "🧹", category: "afternoon" },
-                { name: "Brush Your Teeth", time: "Morning & Evening - Keep them sparkly!", emoji: "🦷", category: "evening
+</html>
