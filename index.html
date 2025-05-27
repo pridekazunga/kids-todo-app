@@ -6,584 +6,340 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="FamilyFlow">
-    <meta name="theme-color" content="#667eea">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✨</text></svg>">
-    <title>FamilyFlow - Smart Family Task Manager</title>
+    <meta name="apple-mobile-web-app-title" content="My Todo List">
+    <meta name="theme-color" content="#ff6b9d">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📝</text></svg>">
+    <title>My Weekly To-Do List</title>
     <style>
-        /* Design System & CSS Variables */
-        :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --secondary-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            --warm-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fad0c4 100%);
-            
-            /* Glassmorphism */
-            --glass-bg: rgba(255, 255, 255, 0.25);
-            --glass-border: rgba(255, 255, 255, 0.18);
-            --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
-            --glass-blur: blur(20px);
-            
-            /* 3D Effects */
-            --shadow-soft: 0 4px 15px rgba(0, 0, 0, 0.1);
-            --shadow-medium: 0 8px 25px rgba(0, 0, 0, 0.15);
-            --shadow-strong: 0 15px 35px rgba(0, 0, 0, 0.2);
-            --shadow-glow: 0 0 20px rgba(102, 126, 234, 0.3);
-            
-            /* Animation Curves */
-            --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            --ease-smooth: cubic-bezier(0.4, 0.0, 0.2, 1);
-            --ease-quick: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            
-            /* Light Mode Colors */
-            --bg-primary: #667eea;
-            --bg-secondary: #764ba2;
-            --text-primary: #2d3748;
-            --text-secondary: #4a5568;
-            --text-muted: #718096;
-            --surface-primary: rgba(255, 255, 255, 0.9);
-            --surface-secondary: rgba(255, 255, 255, 0.7);
-            --border-color: rgba(255, 255, 255, 0.3);
-        }
-
-        /* Dark Mode Variables */
-        [data-theme="dark"] {
-            --bg-primary: #1a202c;
-            --bg-secondary: #2d3748;
-            --text-primary: #f7fafc;
-            --text-secondary: #e2e8f0;
-            --text-muted: #a0aec0;
-            --surface-primary: rgba(45, 55, 72, 0.9);
-            --surface-secondary: rgba(26, 32, 44, 0.8);
-            --border-color: rgba(255, 255, 255, 0.1);
-            --glass-bg: rgba(45, 55, 72, 0.4);
-            --glass-border: rgba(255, 255, 255, 0.1);
-        }
-
-        * {
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: var(--warm-gradient);
             min-height: 100vh;
-            color: var(--text-primary);
-            transition: all 0.3s var(--ease-smooth);
-            overflow-x: hidden;
         }
-
-        [data-theme="dark"] body {
-            background: linear-gradient(135deg, #1a202c 0%, #2d3748 50%, #4a5568 100%);
-        }
-
-        /* Glassmorphism Header */
+        
         .header {
-            background: var(--glass-bg);
-            backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--glass-border);
-            padding: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px;
             text-align: center;
-            box-shadow: var(--glass-shadow);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             position: sticky;
             top: 0;
             z-index: 100;
-            border-radius: 0 0 20px 20px;
-            margin-bottom: 20px;
         }
-
-        .header-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 800px;
-            margin: 0 auto 15px;
-        }
-
-        /* Theme Toggle */
-        .theme-toggle {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 50px;
-            padding: 8px 16px;
-            cursor: pointer;
-            transition: all 0.3s var(--ease-smooth);
-            backdrop-filter: var(--glass-blur);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--text-secondary);
-        }
-
-        .theme-toggle:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-glow);
-        }
-
-        .theme-icon {
-            font-size: 1.2em;
-            transition: transform 0.3s var(--ease-bounce);
-        }
-
-        .theme-toggle:hover .theme-icon {
-            transform: rotate(20deg) scale(1.1);
-        }
-
-        /* Mode Toggle Buttons */
+        
         .mode-toggle {
             display: flex;
+            justify-content: center;
             gap: 10px;
-            justify-content: center;
-        }
-
-        .mode-btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 50px;
-            font-family: inherit;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s var(--ease-smooth);
-            background: var(--glass-bg);
-            backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--glass-border);
-            color: var(--text-secondary);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .mode-btn.active {
-            background: var(--primary-gradient);
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-glow);
-        }
-
-        .mode-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-medium);
-        }
-
-        /* App Title with Animation */
-        .app-title {
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-size: 2.2em;
-            font-weight: 800;
-            margin: 0;
-            letter-spacing: -0.02em;
-            animation: titleGlow 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes titleGlow {
-            0% { filter: drop-shadow(0 0 5px rgba(102, 126, 234, 0.3)); }
-            100% { filter: drop-shadow(0 0 15px rgba(102, 126, 234, 0.6)); }
-        }
-
-        .subtitle {
-            color: var(--text-muted);
-            font-size: 1em;
-            margin-top: 8px;
-            font-weight: 500;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 0 20px 40px;
-        }
-
-        /* Premium Card Design with 3D Effects */
-        .glass-card {
-            background: var(--glass-bg);
-            backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: var(--glass-shadow);
-            position: relative;
-            overflow: hidden;
-            transition: all 0.4s var(--ease-smooth);
-        }
-
-        .glass-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-strong), var(--shadow-glow);
-        }
-
-        /* Section Headers */
-        .section-header {
-            background: var(--primary-gradient);
-            color: white;
-            padding: 20px;
-            border-radius: 16px;
-            text-align: center;
-            margin-bottom: 25px;
-            font-size: 1.4em;
-            font-weight: 700;
-            box-shadow: var(--shadow-medium);
-        }
-
-        /* Enhanced Task Cards */
-        .task-card {
-            background: var(--surface-primary);
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 16px;
-            border: 1px solid var(--border-color);
-            transition: all 0.3s var(--ease-smooth);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .task-card:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-medium);
-            border-color: rgba(102, 126, 234, 0.3);
-        }
-
-        .task-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-            gap: 15px;
-        }
-
-        .task-name {
-            font-size: 1.1em;
-            font-weight: 600;
-            color: var(--text-primary);
-            flex-grow: 1;
-        }
-
-        .task-time {
-            font-size: 0.9em;
-            color: var(--text-muted);
-            font-style: italic;
-            background: var(--glass-bg);
-            backdrop-filter: var(--glass-blur);
-            padding: 4px 12px;
-            border-radius: 20px;
-            border: 1px solid var(--glass-border);
-        }
-
-        /* Enhanced Emoji with Animations */
-        .task-emoji {
-            font-size: 2em;
-            transition: all 0.3s var(--ease-bounce);
-            cursor: pointer;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-        }
-
-        .task-emoji:hover {
-            transform: scale(1.2) rotate(10deg);
-            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
-        }
-
-        /* Day Checkboxes with Enhanced Design */
-        .day-checkboxes {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-top: 15px;
-        }
-
-        .day-checkbox {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 10px;
-            border-radius: 12px;
-            transition: all 0.3s var(--ease-smooth);
-            cursor: pointer;
-            background: var(--glass-bg);
-            backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--glass-border);
-            min-width: 60px;
-        }
-
-        .day-checkbox:hover {
-            transform: translateY(-2px) scale(1.05);
-            box-shadow: var(--shadow-medium);
-        }
-
-        .day-checkbox.completed {
-            background: rgba(17, 153, 142, 0.2);
-            border-color: rgba(17, 153, 142, 0.4);
-        }
-
-        .day-label {
-            font-size: 0.8em;
-            font-weight: 700;
-            margin-bottom: 6px;
-            color: var(--text-secondary);
-        }
-
-        .checkbox {
-            width: 24px;
-            height: 24px;
-            cursor: pointer;
-            appearance: none;
-            border: 2px solid var(--border-color);
-            border-radius: 6px;
-            background: var(--surface-secondary);
-            transition: all 0.3s var(--ease-bounce);
-            position: relative;
-        }
-
-        .checkbox:checked {
-            background: var(--success-gradient);
-            border-color: transparent;
-            transform: scale(1.1);
-        }
-
-        .checkbox:checked::after {
-            content: '✓';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-weight: bold;
-            font-size: 14px;
-        }
-
-        /* Progress Indicators */
-        .progress-container {
-            margin-top: 15px;
-            padding: 15px;
-            background: var(--glass-bg);
-            backdrop-filter: var(--glass-blur);
-            border-radius: 12px;
-            border: 1px solid var(--glass-border);
-        }
-
-        .progress-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             margin-bottom: 10px;
         }
-
-        .progress-label {
-            font-size: 0.9em;
-            font-weight: 600;
-            color: var(--text-secondary);
-        }
-
-        .progress-percentage {
-            font-size: 0.8em;
-            color: var(--text-muted);
-            font-weight: 600;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: var(--success-gradient);
-            border-radius: 10px;
-            transition: width 0.6s var(--ease-smooth);
-        }
-
-        /* Admin Panel */
-        .form-input, .form-select {
-            background: var(--surface-primary);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 12px 16px;
+        
+        .mode-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
             font-family: inherit;
-            font-size: 1em;
-            transition: all 0.3s var(--ease-smooth);
-            color: var(--text-primary);
-            flex: 1;
-            min-width: 200px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
-
-        .form-input:focus, .form-select:focus {
-            outline: none;
-            border-color: rgba(102, 126, 234, 0.5);
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-            transform: translateY(-1px);
+        
+        .mode-btn.active {
+            background: #ff6b9d;
+            color: white;
+            transform: scale(1.05);
         }
-
+        
+        .mode-btn:not(.active) {
+            background: #f0f0f0;
+            color: #666;
+        }
+        
+        .app-title {
+            color: #ff1744;
+            font-size: 1.8em;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Parent Admin Panel Styles */
+        .admin-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            border: 3px solid #ff6b9d;
+        }
+        
+        .admin-title {
+            color: #ff1744;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .add-task-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
         .form-row {
             display: flex;
-            gap: 15px;
-            margin-bottom: 15px;
+            gap: 10px;
+            align-items: center;
             flex-wrap: wrap;
         }
-
+        
+        .form-input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1em;
+            min-width: 200px;
+        }
+        
+        .form-select {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1em;
+            background: white;
+        }
+        
         .emoji-picker {
             display: flex;
-            gap: 8px;
+            gap: 5px;
             flex-wrap: wrap;
-            margin: 15px 0;
+            margin: 10px 0;
         }
-
+        
         .emoji-btn {
-            padding: 12px;
-            border: 2px solid var(--border-color);
-            border-radius: 12px;
-            background: var(--surface-primary);
+            padding: 8px;
+            border: 2px solid #ddd;
+            border-radius: 50%;
+            background: white;
             font-size: 1.5em;
             cursor: pointer;
-            transition: all 0.3s var(--ease-bounce);
+            transition: all 0.2s ease;
         }
-
-        .emoji-btn:hover {
-            transform: scale(1.1) rotate(5deg);
-            box-shadow: var(--shadow-medium);
-        }
-
-        .emoji-btn.selected {
-            border-color: rgba(102, 126, 234, 0.7);
-            background: var(--glass-bg);
+        
+        .emoji-btn:hover, .emoji-btn.selected {
+            border-color: #ff6b9d;
+            background: #ffe0e6;
             transform: scale(1.1);
-            box-shadow: var(--shadow-glow);
         }
-
+        
         .add-btn {
-            background: var(--success-gradient);
+            padding: 15px 30px;
+            background: #4caf50;
             color: white;
             border: none;
-            border-radius: 50px;
-            padding: 15px 30px;
+            border-radius: 25px;
             font-family: inherit;
             font-size: 1.1em;
-            font-weight: 600;
+            font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s var(--ease-smooth);
-            box-shadow: var(--shadow-medium);
+            transition: all 0.3s ease;
         }
-
+        
         .add-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-strong);
+            background: #45a049;
+            transform: translateY(-2px);
         }
-
-        .add-btn:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-            transform: none;
+        
+        .custom-tasks {
+            margin-top: 20px;
         }
-
+        
+        .custom-task-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #ff6b9d;
+        }
+        
         .delete-btn {
             background: #f44336;
             color: white;
             border: none;
             border-radius: 50%;
-            width: 32px;
-            height: 32px;
+            width: 30px;
+            height: 30px;
             cursor: pointer;
             font-size: 1.2em;
-            transition: all 0.3s ease;
         }
-
-        .delete-btn:hover {
-            transform: scale(1.1);
-            box-shadow: var(--shadow-medium);
+        
+        /* Child View Styles */
+        .page {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            border: 3px solid;
         }
-
-        /* Achievement Modal */
-        .achievement-celebration {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.8);
-            background: var(--glass-bg);
-            backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 30px;
+        
+        .school-day {
+            border-color: #2196f3;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        }
+        
+        .weekend {
+            border-color: #9c27b0;
+            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+        }
+        
+        .custom-section {
+            border-color: #ff6b9d;
+            background: linear-gradient(135deg, #ffe0e6 0%, #ffcdd2 100%);
+        }
+        
+        .day-title {
+            font-size: 1.6em;
+            font-weight: bold;
+            margin-bottom: 15px;
             text-align: center;
-            box-shadow: var(--shadow-strong);
-            z-index: 1000;
-            opacity: 0;
-            transition: all 0.4s var(--ease-bounce);
         }
-
-        .achievement-celebration.show {
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
+        
+        .school-day .day-title {
+            color: #1976d2;
         }
-
-        .achievement-emoji {
-            font-size: 4em;
-            animation: bounce 0.6s var(--ease-bounce);
+        
+        .weekend .day-title {
+            color: #7b1fa2;
         }
-
-        @keyframes bounce {
-            0%, 20%, 53%, 80%, 100% { transform: translateY(0); }
-            40%, 43% { transform: translateY(-20px); }
-            70% { transform: translateY(-10px); }
-            90% { transform: translateY(-4px); }
+        
+        .custom-section .day-title {
+            color: #c2185b;
         }
-
-        /* Loading Animation */
-        .loading {
-            display: inline-block;
+        
+        .task-item {
+            margin-bottom: 12px;
+            padding: 12px;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 4px solid;
+        }
+        
+        .task-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .task-name {
+            font-size: 1.1em;
+            font-weight: bold;
+            flex-grow: 1;
+        }
+        
+        .task-time {
+            font-size: 0.9em;
+            color: #666;
+            font-style: italic;
+            margin-right: 10px;
+        }
+        
+        .emoji {
+            font-size: 1.8em;
+            transition: transform 0.3s ease;
+        }
+        
+        .day-checkboxes {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+            justify-content: center;
+        }
+        
+        .day-checkbox {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 55px;
+            transition: all 0.3s ease;
+            padding: 5px;
+            border-radius: 8px;
+        }
+        
+        .day-label {
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .school-day .day-label {
+            color: #1976d2;
+        }
+        
+        .weekend .day-label, .custom-section .day-label {
+            color: #7b1fa2;
+        }
+        
+        .checkbox {
             width: 20px;
             height: 20px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
+            cursor: pointer;
+            transform: scale(1.3);
+            -webkit-tap-highlight-color: transparent;
         }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        
+        /* Color coding */
+        .morning { border-left-color: #ff9800; }
+        .afternoon { border-left-color: #4caf50; }
+        .evening { border-left-color: #673ab7; }
+        .anytime { border-left-color: #e91e63; }
+        .custom { border-left-color: #ff6b9d; }
+        
+        .note {
+            background: #fff3e0;
+            border: 2px dashed #ff9800;
+            border-radius: 10px;
+            padding: 12px;
+            margin-top: 15px;
+            text-align: center;
+            color: #e65100;
+            font-weight: bold;
+            font-size: 0.95em;
         }
-
-        /* Hidden class */
+        
         .hidden {
             display: none;
         }
-
-        /* Fade animations */
-        .fade-in {
-            animation: fadeIn 0.5s var(--ease-smooth);
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
+        
+        /* Mobile Optimization */
+        @media screen and (max-width: 768px) {
             .container {
-                padding: 0 15px 30px;
+                padding: 10px;
             }
             
-            .glass-card {
-                padding: 20px;
-                border-radius: 16px;
+            .form-row {
+                flex-direction: column;
+                align-items: stretch;
             }
             
-            .app-title {
-                font-size: 1.8em;
-            }
-            
-            .mode-btn {
-                padding: 10px 18px;
-                font-size: 0.9em;
-            }
-            
-            .task-card {
-                padding: 15px;
+            .form-input, .form-select {
+                min-width: auto;
             }
             
             .day-checkboxes {
@@ -591,43 +347,39 @@
             }
             
             .day-checkbox {
-                min-width: 50px;
-                padding: 8px;
-            }
-
-            .form-row {
-                flex-direction: column;
+                min-width: 45px;
             }
             
-            .form-input, .form-select {
-                min-width: auto;
+            .checkbox {
+                width: 22px;
+                height: 22px;
+            }
+            
+            .app-title {
+                font-size: 1.5em;
+            }
+            
+            .mode-btn {
+                padding: 8px 16px;
+                font-size: 0.9em;
             }
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <div class="header-controls">
-            <div class="theme-toggle" id="themeToggle">
-                <span class="theme-icon">🌙</span>
-                <span class="theme-text">Dark</span>
-            </div>
-            <div class="mode-toggle">
-                <button class="mode-btn active" id="childMode">👧 Child View</button>
-                <button class="mode-btn" id="parentMode">👨‍👩‍👧 Parent Panel</button>
-            </div>
+        <div class="mode-toggle">
+            <button class="mode-btn" id="childMode">👧 Child View</button>
+            <button class="mode-btn" id="parentMode">👨‍👩‍👧 Parent Panel</button>
         </div>
-        <h1 class="app-title">✨ FamilyFlow</h1>
-        <p class="subtitle">Smart Family Task Management</p>
+        <h1 class="app-title">🌟 My Weekly To-Do List 🌟</h1>
     </div>
     
     <div class="container">
         <!-- Parent Admin Panel -->
         <div id="adminPanel" class="hidden">
-            <div class="glass-card">
-                <div class="section-header">
-                    👨‍👩‍👧 Add Custom Tasks
-                </div>
+            <div class="admin-panel">
+                <h2 class="admin-title">👨‍👩‍👧 Add Custom Tasks</h2>
                 
                 <div class="add-task-form">
                     <div class="form-row">
@@ -651,7 +403,7 @@
                     </div>
                     
                     <div>
-                        <label style="font-weight: 600; margin-bottom: 10px; display: block; color: var(--text-secondary);">Choose an emoji:</label>
+                        <label style="font-weight: bold; margin-bottom: 10px; display: block;">Choose an emoji:</label>
                         <div class="emoji-picker">
                             <div class="emoji-btn" data-emoji="🌟">🌟</div>
                             <div class="emoji-btn" data-emoji="🎯">🎯</div>
@@ -668,472 +420,567 @@
                         </div>
                     </div>
                     
-                    <button class="add-btn" id="addTaskBtn">
-                        <span class="btn-text">➕ Add Task</span>
-                    </button>
+                    <button class="add-btn" id="addTaskBtn">➕ Add Task</button>
                 </div>
                 
                 <div class="custom-tasks" id="customTasksList">
-                    <h3 style="color: var(--text-primary); margin-bottom: 15px; font-weight: 600;">📝 Your Custom Tasks:</h3>
+                    <h3 style="color: #ff1744; margin-bottom: 15px;">📝 Your Custom Tasks:</h3>
                     <div id="customTasksContainer"></div>
                 </div>
             </div>
         </div>
         
         <!-- Child View -->
-        <div id="childView" class="fade-in">
+        <div id="childView">
             <!-- School Days Section -->
-            <div class="glass-card">
-                <div class="section-header">
-                    📚 School Days (Monday - Friday)
+            <div class="page school-day">
+                <div class="day-title">📚 School Days (Monday - Friday) 📚</div>
+                
+                <div class="task-item morning">
+                    <div class="task-header">
+                        <div class="task-name">Make My Bed</div>
+                        <div class="task-time">7:00 AM - Right after waking up</div>
+                        <div class="emoji">🛏️</div>
+                    </div>
+                    <div class="day-checkboxes">
+                        <div class="day-checkbox">
+                            <div class="day-label">MON</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">TUE</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">WED</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">THU</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">FRI</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                    </div>
                 </div>
                 
-                <div class="progress-container">
-                    <div class="progress-header">
-                        <span class="progress-label">Weekly Progress</span>
-                        <span class="progress-percentage" id="schoolPercentage">0%</span>
+                <div class="task-item morning">
+                    <div class="task-header">
+                        <div class="task-name">Take Out Lunchbox from School Bag</div>
+                        <div class="task-time">7:05 AM - Get ready for the day</div>
+                        <div class="emoji">🎒</div>
                     </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="schoolProgressFill" style="width: 0%"></div>
+                    <div class="day-checkboxes">
+                        <div class="day-checkbox">
+                            <div class="day-label">MON</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">TUE</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">WED</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">THU</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">FRI</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
                     </div>
                 </div>
                 
-                <div id="schoolTasksContainer"></div>
+                <div class="task-item afternoon">
+                    <div class="task-header">
+                        <div class="task-name">Homework Time</div>
+                        <div class="task-time">After school - 30 minutes</div>
+                        <div class="emoji">📝</div>
+                    </div>
+                    <div class="day-checkboxes">
+                        <div class="day-checkbox">
+                            <div class="day-label">MON</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">TUE</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">WED</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">THU</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">FRI</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="task-item afternoon">
+                    <div class="task-header">
+                        <div class="task-name">Violin Practice</div>
+                        <div class="task-time">After homework - 20 minutes</div>
+                        <div class="emoji">🎻</div>
+                    </div>
+                    <div class="day-checkboxes">
+                        <div class="day-checkbox">
+                            <div class="day-label">MON</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">TUE</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">WED</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">THU</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">FRI</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="task-item afternoon">
+                    <div class="task-header">
+                        <div class="task-name">Play Time</div>
+                        <div class="task-time">Free time - Have fun!</div>
+                        <div class="emoji">🎮</div>
+                    </div>
+                    <div class="day-checkboxes">
+                        <div class="day-checkbox">
+                            <div class="day-label">MON</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">TUE</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">WED</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">THU</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">FRI</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="task-item anytime">
+                    <div class="task-header">
+                        <div class="task-name">Reading Time</div>
+                        <div class="task-time">Anytime - 20 minutes</div>
+                        <div class="emoji">📚</div>
+                    </div>
+                    <div class="day-checkboxes">
+                        <div class="day-checkbox">
+                            <div class="day-label">MON</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">TUE</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">WED</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">THU</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">FRI</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="task-item anytime">
+                    <div class="task-header">
+                        <div class="task-name">Drawing or Writing</div>
+                        <div class="task-time">When I feel creative!</div>
+                        <div class="emoji">🎨</div>
+                    </div>
+                    <div class="day-checkboxes">
+                        <div class="day-checkbox">
+                            <div class="day-label">MON</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">TUE</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">WED</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">THU</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">FRI</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="task-item evening">
+                    <div class="task-header">
+                        <div class="task-name">Pack Lunch and School Bag</div>
+                        <div class="task-time">Evening - Get ready for tomorrow</div>
+                        <div class="emoji">🥪</div>
+                    </div>
+                    <div class="day-checkboxes">
+                        <div class="day-checkbox">
+                            <div class="day-label">MON</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">TUE</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">WED</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">THU</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">FRI</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="task-item evening">
+                    <div class="task-header">
+                        <div class="task-name">Clean My Room</div>
+                        <div class="task-time">Before dinner - 15 minutes</div>
+                        <div class="emoji">🧹</div>
+                    </div>
+                    <div class="day-checkboxes">
+                        <div class="day-checkbox">
+                            <div class="day-label">MON</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">TUE</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">WED</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">THU</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">FRI</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="task-item evening">
+                    <div class="task-header">
+                        <div class="task-name">Brush Your Teeth</div>
+                        <div class="task-time">Morning & Evening - Keep them sparkly!</div>
+                        <div class="emoji">🦷</div>
+                    </div>
+                    <div class="day-checkboxes">
+                        <div class="day-checkbox">
+                            <div class="day-label">MON</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">TUE</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">WED</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">THU</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">FRI</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="task-item evening">
+                    <div class="task-header">
+                        <div class="task-name">Shower Time</div>
+                        <div class="task-time">Evening - Get clean and cozy</div>
+                        <div class="emoji">🚿</div>
+                    </div>
+                    <div class="day-checkboxes">
+                        <div class="day-checkbox">
+                            <div class="day-label">MON</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">TUE</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">WED</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">THU</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">FRI</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Custom School Day Tasks will be inserted here -->
                 <div id="customSchoolTasks"></div>
+                
+                <div class="note">
+                    🌟 Check off each school day as you complete your tasks! 🌟<br>
+                    Try to get all 5 checkboxes for each task! 💪
+                </div>
             </div>
             
             <!-- Weekend Section -->
-            <div class="glass-card">
-                <div class="section-header" style="background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);">
-                    🎉 Weekends (Saturday & Sunday)
+            <div class="page weekend">
+                <div class="day-title">🎉 Weekends (Saturday & Sunday) 🎉</div>
+                
+                <div class="task-item morning">
+                    <div class="task-header">
+                        <div class="task-name">Make My Bed</div>
+                        <div class="task-time">7:00 AM - Start the day right</div>
+                        <div class="emoji">🛏️</div>
+                    </div>
+                    <div class="day-checkboxes">
+                        <div class="day-checkbox">
+                            <div class="day-label">SAT</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">SUN</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                    </div>
                 </div>
                 
-                <div class="progress-container">
-                    <div class="progress-header">
-                        <span class="progress-label">Weekend Progress</span>
-                        <span class="progress-percentage" id="weekendPercentage">0%</span>
+                <div class="task-item anytime">
+                    <div class="task-header">
+                        <div class="task-name">Violin Practice</div>
+                        <div class="task-time">Anytime - 20 minutes</div>
+                        <div class="emoji">🎻</div>
                     </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="weekendProgressFill" style="width: 0%"></div>
+                    <div class="day-checkboxes">
+                        <div class="day-checkbox">
+                            <div class="day-label">SAT</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">SUN</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
                     </div>
                 </div>
                 
-                <div id="weekendTasksContainer"></div>
+                <div class="task-item anytime">
+                    <div class="task-header">
+                        <div class="task-name">Extra Play Time</div>
+                        <div class="task-time">More fun time on weekends!</div>
+                        <div class="emoji">🎈</div>
+                    </div>
+                    <div class="day-checkboxes">
+                        <div class="day-checkbox">
+                            <div class="day-label">SAT</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="day-checkbox">
+                            <div class="day-label">SUN</div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Custom Weekend Tasks will be inserted here -->
                 <div id="customWeekendTasks"></div>
-            </div>
-            
-            <!-- Custom Tasks Section -->
-            <div class="glass-card" id="customBothSection" style="display: none;">
-                <div class="section-header" style="background: linear-gradient(135deg, #ff6b9d 0%, #c2185b 100%);">
-                    🌟 Special Tasks (All Week!)
+
+                <div class="note">
+                    🌟 Check off each weekend day as you complete your tasks! 🌟<br>
+                    Have a great weekend! 🎉
                 </div>
-                
-                <div class="progress-container">
-                    <div class="progress-header">
-                        <span class="progress-label">All Week Progress</span>
-                        <span class="progress-percentage" id="bothPercentage">0%</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="bothProgressFill" style="width: 0%"></div>
-                    </div>
-                </div>
-                
-                <div id="customBothTasks"></div>
             </div>
         </div>
     </div>
-    
-    <!-- Achievement Modal -->
-    <div class="achievement-celebration" id="achievementModal">
-        <div class="achievement-emoji" id="achievementEmoji">🎉</div>
-        <h3 style="color: var(--text-primary); margin: 15px 0 5px; font-weight: 700;">Awesome Job!</h3>
-        <p style="color: var(--text-muted); margin: 0;">You completed all days for this task!</p>
-    </div>
 
     <script>
-        // Wait for DOM to be ready
-        document.addEventListener('DOMContentLoaded', function() {
-            // App State
-            let selectedEmoji = '🌟';
-    let customTasks = [];
-    
-    // Default Tasks
-    const defaultSchoolTasks = [
-        { name: "Make My Bed", time: "7:00 AM - Right after waking up", emoji: "🛏️", category: "morning" },
-        { name: "Take Out Lunchbox from School Bag", time: "7:05 AM - Get ready for the day", emoji: "🎒", category: "morning" },
-        { name: "Homework Time", time: "After school - 30 minutes", emoji: "📝", category: "afternoon" },
-        { name: "Violin Practice", time: "After homework - 20 minutes", emoji: "🎻", category: "afternoon" },
-        { name: "Play Time", time: "Free time - Have fun!", emoji: "🎮", category: "afternoon" },
-        { name: "Reading Time", time: "Anytime - 20 minutes", emoji: "📚", category: "anytime" },
-        { name: "Drawing or Writing", time: "When I feel creative!", emoji: "🎨", category: "anytime" },
-        { name: "Pack Lunch and School Bag", time: "Evening - Get ready for tomorrow", emoji: "🥪", category: "evening" },
-        { name: "Clean My Room", time: "Before dinner - 15 minutes", emoji: "🧹", category: "evening" },
-            customTasks = [];
-            
-            // Default Tasks
-            const defaultSchoolTasks = [
-                { name: "Make My Bed", time: "7:00 AM - Right after waking up", emoji: "🛏️", category: "morning" },
-                { name: "Take Out Lunchbox from School Bag", time: "7:05 AM - Get ready for the day", emoji: "🎒", category: "morning" },
-                { name: "Homework Time", time: "After school - 30 minutes", emoji: "📝", category: "afternoon" },
-                { name: "Violin Practice", time: "After homework - 20 minutes", emoji: "🎻", category: "afternoon" },
-                { name: "Play Time", time: "Free time - Have fun!", emoji: "🎮", category: "afternoon" },
-                { name: "Reading Time", time: "Anytime - 20 minutes", emoji: "📚", category: "anytime" },
-                { name: "Drawing or Writing", time: "When I feel creative!", emoji: "🎨", category: "anytime" },
-                { name: "Pack Lunch and School Bag", time: "Evening - Get ready for tomorrow", emoji: "🥪", category: "evening" },
-                { name: "Clean My Room", time: "Before dinner - 15 minutes", emoji: "🧹", category: "evening" },
-                { name: "Brush Your Teeth", time: "Morning & Evening - Keep them sparkly!", emoji: "🦷", category: "evening" },
-                { name: "Shower Time", time: "Evening - Get clean and cozy", emoji: "🚿", category: "evening" }
-            ];
-            
-            const defaultWeekendTasks = [
-                { name: "Make My Bed", time: "7:00 AM - Start the day right", emoji: "🛏️", category: "morning" },
-                { name: "Violin Practice", time: "Anytime - 20 minutes", emoji: "🎻", category: "anytime" },
-                { name: "Extra Play Time", time: "More fun time on weekends!", emoji: "🎈", category: "anytime" },
-                { name: "Reading Adventure", time: "Longer reading time - 30 minutes", emoji: "📖", category: "anytime" },
-                { name: "Creative Time", time: "Drawing, writing, or crafts!", emoji: "✨", category: "anytime" },
-                { name: "Clean My Room", time: "Afternoon - Keep it tidy", emoji: "🧹", category: "afternoon" },
-                { name: "Brush Your Teeth", time: "Morning & Evening - Keep them sparkly!", emoji: "🦷", category: "evening" },
-                { name: "Shower Time", time: "Evening - Stay fresh", emoji: "🛁", category: "evening" }
-            ];
-            
-            // Storage Functions
-    function saveCustomTasks() {
-        try {
-            localStorage.setItem('customTasks', JSON.stringify(customTasks));
-        } catch (e) {
-            console.log('Storage not available');
-        }
-    }
-    
-    function loadCustomTasks() {
-        try {
-            const saved = localStorage.getItem('customTasks');
-            if (saved) customTasks = JSON.parse(saved);
-        } catch (e) {
-            console.log('Storage not available');
-        }
-    }
-    
-    // Theme Management
-    const themeToggle = document.getElementById('themeToggle');
-    const themeIcon = themeToggle.querySelector('.theme-icon');
-    const themeText = themeToggle.querySelector('.theme-text');
-    
-    function setTheme(theme) {
-        document.documentElement.setAttribute('data-theme', theme);
-        try {
-            localStorage.setItem('theme', theme);
-        } catch (e) {}
-        
-        if (theme === 'dark') {
-            themeIcon.textContent = '☀️';
-            themeText.textContent = 'Light';
-        } else {
-            themeIcon.textContent = '🌙';
-            themeText.textContent = 'Dark';
-        }
-    }
-    
-    // Initialize theme
-    const savedTheme = localStorage.getItem('theme') || 
-                      (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-    setTheme(savedTheme);
-    
-    themeToggle.addEventListener('click', function() {
-        const currentTheme = document.documentElement.getAttribute('data-theme');
-        setTheme(currentTheme === 'dark' ? 'light' : 'dark');
-    });
-    
-    // Mode Switching
-    const childModeBtn = document.getElementById('childMode');
-    const parentModeBtn = document.getElementById('parentMode');
-    const adminPanel = document.getElementById('adminPanel');
-    const childView = document.getElementById('childView');
-    
-    function switchToChildMode() {
-        childModeBtn.classList.add('active');
-        parentModeBtn.classList.remove('active');
-        adminPanel.classList.add('hidden');
-        childView.classList.remove('hidden');
-    }
-    
-    function switchToParentMode() {
-        parentModeBtn.classList.add('active');
-        childModeBtn.classList.remove('active');
-        adminPanel.classList.remove('hidden');
-        childView.classList.add('hidden');
-    }
-    
-    childModeBtn.addEventListener('click', switchToChildMode);
-    parentModeBtn.addEventListener('click', switchToParentMode);
-    
-    // Emoji Selection
-    function attachEmojiListeners() {
-        document.querySelectorAll('.emoji-btn').forEach(function(btn) {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.emoji-btn').forEach(function(b) {
-                    b.classList.remove('selected');
-                });
-                this.classList.add('selected');
-                selectedEmoji = this.dataset.emoji;
+        // Toggle between Parent and Child modes
+        const childMode = document.getElementById('childMode');
+        const parentMode = document.getElementById('parentMode');
+        const adminPanel = document.getElementById('adminPanel');
+        const childView = document.getElementById('childView');
+
+        childMode.addEventListener('click', () => {
+            childMode.classList.add('active');
+            parentMode.classList.remove('active');
+            adminPanel.classList.add('hidden');
+            childView.classList.remove('hidden');
+        });
+
+        parentMode.addEventListener('click', () => {
+            parentMode.classList.add('active');
+            childMode.classList.remove('active');
+            adminPanel.classList.remove('hidden');
+            childView.classList.add('hidden');
+        });
+
+        // Initialize Child Mode as active
+        childMode.click();
+
+        // Handle emoji selection
+        const emojiButtons = document.querySelectorAll('.emoji-btn');
+        let selectedEmoji = null;
+
+        emojiButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                emojiButtons.forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                selectedEmoji = btn.getAttribute('data-emoji');
             });
         });
-    }
-    
-    // Create Task HTML
-    function createTaskHTML(task, type) {
-        const isWeekend = type === 'weekend';
-        const isBoth = type === 'both';
-        
-        let checkboxes = '';
-        if (isWeekend) {
-            checkboxes = '<div class="day-checkbox"><div class="day-label">SAT</div><input type="checkbox" class="checkbox"></div><div class="day-checkbox"><div class="day-label">SUN</div><input type="checkbox" class="checkbox"></div>';
-        } else if (isBoth) {
-            checkboxes = '<div class="day-checkbox"><div class="day-label">MON</div><input type="checkbox" class="checkbox"></div><div class="day-checkbox"><div class="day-label">TUE</div><input type="checkbox" class="checkbox"></div><div class="day-checkbox"><div class="day-label">WED</div><input type="checkbox" class="checkbox"></div><div class="day-checkbox"><div class="day-label">THU</div><input type="checkbox" class="checkbox"></div><div class="day-checkbox"><div class="day-label">FRI</div><input type="checkbox" class="checkbox"></div><div class="day-checkbox"><div class="day-label">SAT</div><input type="checkbox" class="checkbox"></div><div class="day-checkbox"><div class="day-label">SUN</div><input type="checkbox" class="checkbox"></div>';
-        } else {
-            checkboxes = '<div class="day-checkbox"><div class="day-label">MON</div><input type="checkbox" class="checkbox"></div><div class="day-checkbox"><div class="day-label">TUE</div><input type="checkbox" class="checkbox"></div><div class="day-checkbox"><div class="day-label">WED</div><input type="checkbox" class="checkbox"></div><div class="day-checkbox"><div class="day-label">THU</div><input type="checkbox" class="checkbox"></div><div class="day-checkbox"><div class="day-label">FRI</div><input type="checkbox" class="checkbox"></div>';
-        }
-        
-        return '<div class="task-card ' + task.category + '"><div class="task-header"><div class="task-name">' + task.name + '</div><div class="task-time">' + task.time + '</div><div class="task-emoji">' + task.emoji + '</div></div><div class="day-checkboxes">' + checkboxes + '</div></div>';
-    }
-    
-    // Render Tasks
-    function renderAllTasks() {
-        const schoolContainer = document.getElementById('schoolTasksContainer');
-        const weekendContainer = document.getElementById('weekendTasksContainer');
-        
-        if (schoolContainer) {
-            schoolContainer.innerHTML = defaultSchoolTasks.map(function(task) {
-                return createTaskHTML(task, 'school');
-            }).join('');
-        }
-        
-        if (weekendContainer) {
-            weekendContainer.innerHTML = defaultWeekendTasks.map(function(task) {
-                return createTaskHTML(task, 'weekend');
-            }).join('');
-        }
-        
-        renderCustomTasks();
-        renderChildTasks();
-    }
-    
-    // Render Custom Tasks in Admin
-    function renderCustomTasks() {
-        const container = document.getElementById('customTasksContainer');
-        if (!container) return;
-        
-        if (customTasks.length === 0) {
-            container.innerHTML = '<p style="text-align: center; color: var(--text-muted); font-style: italic;">No custom tasks yet. Add one above! ✨</p>';
-            return;
-        }
-        
-        container.innerHTML = '';
-        customTasks.forEach(function(task) {
-            const taskDiv = document.createElement('div');
-            taskDiv.className = 'task-card';
-            taskDiv.innerHTML = '<div class="task-header"><div><strong>' + task.emoji + ' ' + task.name + '</strong><br><small style="color: var(--text-muted);">' + task.time + ' • ' + (task.type === 'schoolday' ? 'School Days' : task.type === 'weekend' ? 'Weekends' : 'All Week') + ' • ' + task.category + '</small></div><button class="delete-btn" data-task-id="' + task.id + '">×</button></div>';
-            container.appendChild(taskDiv);
-        });
-        
-        // Attach delete listeners
-        container.querySelectorAll('.delete-btn').forEach(function(btn) {
-            btn.addEventListener('click', function() {
-                const taskId = parseInt(this.dataset.taskId);
-                if (confirm('Delete this task?')) {
-                    customTasks = customTasks.filter(function(task) {
-                        return task.id !== taskId;
-                    });
-                    saveCustomTasks();
-                    renderCustomTasks();
-                    renderChildTasks();
-                    updateProgress();
-                }
-            });
-        });
-    }
-    
-    // Render Custom Tasks in Child View
-    function renderChildTasks() {
-        const schoolContainer = document.getElementById('customSchoolTasks');
-        const weekendContainer = document.getElementById('customWeekendTasks');
-        const bothContainer = document.getElementById('customBothTasks');
-        const bothSection = document.getElementById('customBothSection');
-        
-        if (schoolContainer) schoolContainer.innerHTML = '';
-        if (weekendContainer) weekendContainer.innerHTML = '';
-        if (bothContainer) bothContainer.innerHTML = '';
-        
-        let hasBothTasks = false;
-        
-        customTasks.forEach(function(task) {
-            if (task.type === 'schoolday' && schoolContainer) {
-                schoolContainer.innerHTML += createTaskHTML(task, 'school');
-            } else if (task.type === 'weekend' && weekendContainer) {
-                weekendContainer.innerHTML += createTaskHTML(task, 'weekend');
-            } else if (task.type === 'both' && bothContainer) {
-                bothContainer.innerHTML += createTaskHTML(task, 'both');
-                hasBothTasks = true;
-            }
-        });
-        
-        if (bothSection) {
-            bothSection.style.display = hasBothTasks ? 'block' : 'none';
-        }
-    }
-    
-    // Add Task
-    const addTaskBtn = document.getElementById('addTaskBtn');
-    if (addTaskBtn) {
-        addTaskBtn.addEventListener('click', function() {
-            const taskNameInput = document.getElementById('taskName');
-            const taskTimeInput = document.getElementById('taskTime');
-            const taskTypeSelect = document.getElementById('taskType');
-            const taskCategorySelect = document.getElementById('taskCategory');
-            const btnText = this.querySelector('.btn-text');
-            
-            if (!taskNameInput || !taskNameInput.value.trim()) {
-                alert('Please enter a task name!');
+
+        // Handle task addition
+        const addTaskBtn = document.getElementById('addTaskBtn');
+        const taskNameInput = document.getElementById('taskName');
+        const taskTimeInput = document.getElementById('taskTime');
+        const taskTypeSelect = document.getElementById('taskType');
+        const taskCategorySelect = document.getElementById('taskCategory');
+        const customTasksContainer = document.getElementById('customTasksContainer');
+        const customSchoolTasks = document.getElementById('customSchoolTasks');
+        const customWeekendTasks = document.getElementById('customWeekendTasks');
+
+        addTaskBtn.addEventListener('click', () => {
+            if (!taskNameInput.value || !taskTimeInput.value || !selectedEmoji) {
+                alert('Please fill in all fields and select an emoji!');
                 return;
             }
-            
-            // Loading state
-            if (btnText) {
-                btnText.innerHTML = '<span class="loading"></span> Adding...';
+
+            const taskItem = createTaskItem(
+                taskNameInput.value,
+                taskTimeInput.value,
+                selectedEmoji,
+                taskTypeSelect.value,
+                taskCategorySelect.value
+            );
+
+            // Add to custom tasks list
+            const customTaskItem = document.createElement('div');
+            customTaskItem.className = 'custom-task-item';
+            customTaskItem.innerHTML = `
+                <span>${selectedEmoji} ${taskNameInput.value}</span>
+                <button class="delete-btn" onclick="this.parentElement.remove()">×</button>
+            `;
+            customTasksContainer.appendChild(customTaskItem);
+
+            // Add to appropriate section
+            if (taskTypeSelect.value === 'schoolday' || taskTypeSelect.value === 'both') {
+                customSchoolTasks.appendChild(taskItem.cloneNode(true));
             }
-            this.disabled = true;
-            
-            const self = this;
-            setTimeout(function() {
-                const newTask = {
-                    id: Date.now(),
-                    name: taskNameInput.value.trim(),
-                    time: taskTimeInput ? (taskTimeInput.value.trim() || 'Anytime') : 'Anytime',
-                    type: taskTypeSelect ? taskTypeSelect.value : 'schoolday',
-                    category: taskCategorySelect ? taskCategorySelect.value : 'anytime',
-                    emoji: selectedEmoji
-                };
-                
-                customTasks.push(newTask);
-                saveCustomTasks();
-                
-                // Clear form
-                if (taskNameInput) taskNameInput.value = '';
-                if (taskTimeInput) taskTimeInput.value = '';
-                document.querySelectorAll('.emoji-btn').forEach(function(b) {
-                    b.classList.remove('selected');
-                });
-                selectedEmoji = '🌟';
-                
-                // Reset button
-                if (btnText) {
-                    btnText.innerHTML = '➕ Add Task';
-                }
-                self.disabled = false;
-                
-                renderCustomTasks();
-                renderChildTasks();
-                updateProgress();
-            }, 500);
+            if (taskTypeSelect.value === 'weekend' || taskTypeSelect.value === 'both') {
+                const weekendTask = taskItem.cloneNode(true);
+                weekendTask.querySelector('.day-checkboxes').innerHTML = `
+                    <div class="day-checkbox">
+                        <div class="day-label">SAT</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">SUN</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                `;
+                customWeekendTasks.appendChild(weekendTask);
+            }
+
+            // Reset form
+            taskNameInput.value = '';
+            taskTimeInput.value = '';
+            emojiButtons.forEach(btn => btn.classList.remove('selected'));
+            selectedEmoji = null;
         });
-    }
-    
-    // Update Progress
-    function updateProgress() {
-        // School progress
-        const schoolCheckboxes = document.querySelectorAll('#schoolTasksContainer .checkbox, #customSchoolTasks .checkbox');
-        const schoolChecked = document.querySelectorAll('#schoolTasksContainer .checkbox:checked, #customSchoolTasks .checkbox:checked');
-        const schoolPercentage = schoolCheckboxes.length > 0 ? Math.round((schoolChecked.length / schoolCheckboxes.length) * 100) : 0;
-        
-        const schoolPercentageEl = document.getElementById('schoolPercentage');
-        const schoolProgressFill = document.getElementById('schoolProgressFill');
-        if (schoolPercentageEl) schoolPercentageEl.textContent = schoolPercentage + '%';
-        if (schoolProgressFill) schoolProgressFill.style.width = schoolPercentage + '%';
-        
-        // Weekend progress
-        const weekendCheckboxes = document.querySelectorAll('#weekendTasksContainer .checkbox, #customWeekendTasks .checkbox');
-        const weekendChecked = document.querySelectorAll('#weekendTasksContainer .checkbox:checked, #customWeekendTasks .checkbox:checked');
-        const weekendPercentage = weekendCheckboxes.length > 0 ? Math.round((weekendChecked.length / weekendCheckboxes.length) * 100) : 0;
-        
-        const weekendPercentageEl = document.getElementById('weekendPercentage');
-        const weekendProgressFill = document.getElementById('weekendProgressFill');
-        if (weekendPercentageEl) weekendPercentageEl.textContent = weekendPercentage + '%';
-        if (weekendProgressFill) weekendProgressFill.style.width = weekendPercentage + '%';
-        
-        // Both tasks progress
-        const bothCheckboxes = document.querySelectorAll('#customBothTasks .checkbox');
-        if (bothCheckboxes.length > 0) {
-            const bothChecked = document.querySelectorAll('#customBothTasks .checkbox:checked');
-            const bothPercentage = Math.round((bothChecked.length / bothCheckboxes.length) * 100);
-            const bothPercentageEl = document.getElementById('bothPercentage');
-            const bothProgressFill = document.getElementById('bothProgressFill');
-            if (bothPercentageEl) bothPercentageEl.textContent = bothPercentage + '%';
-            if (bothProgressFill) bothProgressFill.style.width = bothPercentage + '%';
+
+        function createTaskItem(name, time, emoji, type, category) {
+            const div = document.createElement('div');
+            div.className = `task-item ${category}`;
+            div.innerHTML = `
+                <div class="task-header">
+                    <div class="task-name">${name}</div>
+                    <div class="task-time">${time}</div>
+                    <div class="emoji">${emoji}</div>
+                </div>
+                <div class="day-checkboxes">
+                    <div class="day-checkbox">
+                        <div class="day-label">MON</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">TUE</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">WED</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">THU</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                    <div class="day-checkbox">
+                        <div class="day-label">FRI</div>
+                        <input type="checkbox" class="checkbox">
+                    </div>
+                </div>
+            `;
+            return div;
         }
-    }
-    
-    // Achievement Celebration
-    function showAchievement(emoji) {
-        const modal = document.getElementById('achievementModal');
-        const emojiElement = document.getElementById('achievementEmoji');
-        
-        if (modal && emojiElement) {
-            emojiElement.textContent = emoji;
-            modal.classList.add('show');
-            
-            setTimeout(function() {
-                modal.classList.remove('show');
-            }, 2000);
-        }
-    }
-    
-    // Checkbox Events
-    document.addEventListener('change', function(e) {
-        if (e.target.classList.contains('checkbox')) {
-            const dayCheckbox = e.target.closest('.day-checkbox');
-            const taskCard = e.target.closest('.task-card');
-            
-            if (e.target.checked) {
-                if (dayCheckbox) dayCheckbox.classList.add('completed');
-                
-                // Check if all checkboxes completed
-                if (taskCard) {
-                    const allCheckboxes = taskCard.querySelectorAll('.checkbox');
-                    const checkedBoxes = taskCard.querySelectorAll('.checkbox:checked');
-                    
-                    if (allCheckboxes.length === checkedBoxes.length) {
-                        const emoji = taskCard.querySelector('.task-emoji');
-                        const emojiText = emoji ? emoji.textContent : '🎉';
-                        
-                        // Animate emoji
-                        if (emoji) {
-                            emoji.style.transform = 'scale(1.5) rotate(360deg)';
-                            setTimeout(function() {
-                                emoji.style.transform = 'scale(1) rotate(0deg)';
-                            }, 600);
-                        }
-                        
-                        // Show celebration
-                        setTimeout(function() {
-                            showAchievement(emojiText);
-                        }, 300);
-                    }
-                }
-            } else {
-                if (dayCheckbox) dayCheckbox.classList.remove('completed');
+
+        // Make all checkboxes interactive
+        document.addEventListener('change', (e) => {
+            if (e.target.matches('.checkbox')) {
+                const checkbox = e.target;
+                checkbox.checked = checkbox.checked;
             }
-            
-            updateProgress();
-        }
-    });
-    
-    // Initialize
-    loadCustomTasks();
-    renderAllTasks();
-    updateProgress();
-    attachEmojiListeners();
-    switchToChildMode();
-});
-</script>
+        });
+    </script>
 </body>
 </html>
