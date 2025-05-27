@@ -364,6 +364,118 @@
                 font-size: 0.9em;
             }
         }
+
+        /* Gamification Styles */
+        .points-display {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 10px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+
+        .streak-display {
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF8E8E 100%);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 10px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+
+        .achievement {
+            background: white;
+            border-radius: 15px;
+            padding: 15px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .achievement.unlocked {
+            background: linear-gradient(135deg, #E3FDF5 0%, #FFE6FA 100%);
+        }
+
+        .achievement:hover {
+            transform: translateY(-2px);
+        }
+
+        .achievement-icon {
+            font-size: 2em;
+        }
+
+        .achievement-info {
+            flex-grow: 1;
+        }
+
+        .achievement-name {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .achievement-desc {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .achievement-progress {
+            background: #eee;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+
+        .achievement-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b9d 0%, #ff8da1 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .level-badge {
+            background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 10px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+
+        .reward-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            z-index: 1000;
+            text-align: center;
+            display: none;
+        }
+
+        .reward-popup.show {
+            display: block;
+            animation: popIn 0.5s ease;
+        }
+
+        @keyframes popIn {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
     </style>
 </head>
 <body>
@@ -373,6 +485,11 @@
             <button class="mode-btn" id="parentMode">👨‍👩‍👧 Parent Panel</button>
         </div>
         <h1 class="app-title">🌟 My Weekly To-Do List 🌟</h1>
+        <div id="gamificationStats">
+            <div class="points-display">🌟 Points: <span id="pointsCount">0</span></div>
+            <div class="streak-display">🔥 Streak: <span id="streakCount">0</span> days</div>
+            <div class="level-badge">👑 Level: <span id="levelCount">1</span></div>
+        </div>
     </div>
     
     <div class="container">
@@ -844,6 +961,12 @@
         </div>
     </div>
 
+    <div class="reward-popup" id="rewardPopup">
+        <h2>🎉 Achievement Unlocked! 🎉</h2>
+        <div id="rewardMessage"></div>
+        <button onclick="this.parentElement.classList.remove('show')" style="margin-top: 15px; padding: 10px 20px; background: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">Awesome!</button>
+    </div>
+
     <script>
         // Toggle between Parent and Child modes
         const childMode = document.getElementById('childMode');
@@ -974,13 +1097,138 @@
             return div;
         }
 
-        // Make all checkboxes interactive
+        // Gamification System
+        let points = parseInt(localStorage.getItem('points')) || 0;
+        let streak = parseInt(localStorage.getItem('streak')) || 0;
+        let level = parseInt(localStorage.getItem('level')) || 1;
+        let lastCheckDate = localStorage.getItem('lastCheckDate');
+        let achievements = {
+            taskMaster: { name: "Task Master", desc: "Complete 50 tasks", progress: 0, target: 50, icon: "🏆", unlocked: false },
+            streakHero: { name: "Streak Hero", desc: "Maintain a 7-day streak", progress: 0, target: 7, icon: "🔥", unlocked: false },
+            weekendWarrior: { name: "Weekend Warrior", desc: "Complete all weekend tasks", progress: 0, target: 5, icon: "🎯", unlocked: false },
+            earlyBird: { name: "Early Bird", desc: "Complete morning tasks 5 days in a row", progress: 0, target: 5, icon: "🌅", unlocked: false }
+        };
+
+        // Load achievements from localStorage
+        const savedAchievements = localStorage.getItem('achievements');
+        if (savedAchievements) {
+            achievements = JSON.parse(savedAchievements);
+        }
+
+        function updateStats() {
+            document.getElementById('pointsCount').textContent = points;
+            document.getElementById('streakCount').textContent = streak;
+            document.getElementById('levelCount').textContent = level;
+
+            // Save to localStorage
+            localStorage.setItem('points', points);
+            localStorage.setItem('streak', streak);
+            localStorage.setItem('level', level);
+            localStorage.setItem('achievements', JSON.stringify(achievements));
+        }
+
+        function checkStreak() {
+            const today = new Date().toDateString();
+            if (lastCheckDate && lastCheckDate !== today) {
+                const lastCheck = new Date(lastCheckDate);
+                const daysDiff = Math.floor((new Date() - lastCheck) / (1000 * 60 * 60 * 24));
+                
+                if (daysDiff === 1) {
+                    streak++;
+                    showReward("🔥 Streak increased! Keep it up!");
+                } else if (daysDiff > 1) {
+                    streak = 0;
+                }
+            }
+            lastCheckDate = today;
+            localStorage.setItem('lastCheckDate', lastCheckDate);
+            updateStats();
+        }
+
+        function addPoints(amount) {
+            points += amount;
+            if (points >= level * 100) {
+                levelUp();
+            }
+            updateStats();
+        }
+
+        function levelUp() {
+            level++;
+            showReward("🎊 Level Up! 🎊\nYou're now level " + level + "!");
+        }
+
+        function showReward(message) {
+            const popup = document.getElementById('rewardPopup');
+            document.getElementById('rewardMessage').textContent = message;
+            popup.classList.add('show');
+            
+            // Confetti effect
+            for (let i = 0; i < 50; i++) {
+                createConfetti();
+            }
+        }
+
+        function createConfetti() {
+            const confetti = document.createElement('div');
+            confetti.style.cssText = `
+                position: fixed;
+                width: 10px;
+                height: 10px;
+                background: ${['#ff6b9d', '#4CAF50', '#FFD700', '#FF6B6B'][Math.floor(Math.random() * 4)]};
+                left: ${Math.random() * 100}vw;
+                top: -10px;
+                transform: rotate(${Math.random() * 360}deg);
+                pointer-events: none;
+                z-index: 999;
+            `;
+            document.body.appendChild(confetti);
+
+            const animation = confetti.animate([
+                { transform: `translate(0, 0) rotate(0deg)`, opacity: 1 },
+                { transform: `translate(${Math.random() * 100 - 50}px, ${window.innerHeight}px) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+            ], {
+                duration: Math.random() * 1000 + 1000,
+                easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+            });
+
+            animation.onfinish = () => confetti.remove();
+        }
+
+        // Update checkbox event listener
         document.addEventListener('change', (e) => {
             if (e.target.matches('.checkbox')) {
                 const checkbox = e.target;
                 checkbox.checked = checkbox.checked;
+                
+                if (checkbox.checked) {
+                    addPoints(10);
+                    checkStreak();
+                    
+                    // Update achievements
+                    achievements.taskMaster.progress++;
+                    if (checkbox.closest('.morning')) {
+                        achievements.earlyBird.progress++;
+                    }
+                    if (checkbox.closest('.weekend')) {
+                        achievements.weekendWarrior.progress++;
+                    }
+                    
+                    // Check achievements
+                    for (let key in achievements) {
+                        if (!achievements[key].unlocked && achievements[key].progress >= achievements[key].target) {
+                            achievements[key].unlocked = true;
+                            showReward(`🏆 Achievement Unlocked!\n${achievements[key].name}`);
+                            addPoints(50);
+                        }
+                    }
+                }
             }
         });
+
+        // Initialize stats
+        updateStats();
+        checkStreak();
     </script>
 </body>
 </html>
