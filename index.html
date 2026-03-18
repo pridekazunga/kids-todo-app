@@ -7,12 +7,40 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="My Todo List">
-    <meta name="theme-color" content="#ff6b9d">
+    <meta name="theme-color" content="#2196f3" id="metaThemeColor">
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📝</text></svg>">
+    <link rel="manifest" href="manifest.json">
     <title>My Weekly To-Do List</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0');
+
+        :root {
+            /* Default: Ocean (Blue) */
+            --primary-color: #2196f3;
+            --primary-light: #e3f2fd;
+            --primary-dark: #0d47a1;
+            --accent-color: #1976d2;
+            --app-bg: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+        }
+        [data-theme="berry"] {
+            --primary-color: #ff6b9d;
+            --primary-light: #fff0f4;
+            --primary-dark: #c2185b;
+            --accent-color: #ff1744;
+        }
+        [data-theme="dino"] {
+            --primary-color: #4caf50;
+            --primary-light: #e8f5e9;
+            --primary-dark: #1b5e20;
+            --accent-color: #2e7d32;
+        }
+        [data-theme="sunshine"] {
+            --primary-color: #ff9800;
+            --primary-light: #fff3e0;
+            --primary-dark: #e65100;
+            --accent-color: #f57c00;
+        }
 
         *,
         *::before,
@@ -26,7 +54,7 @@
 
         body {
             font-family: 'Nunito', sans-serif;
-            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            background: var(--app-bg);
             margin: 0;
             padding: 0;
             min-height: 100vh;
@@ -61,7 +89,7 @@
         }
         
         .mode-btn.active {
-            background: #ff6b9d;
+            background: var(--primary-color);
             color: white;
             transform: scale(1.05);
         }
@@ -72,7 +100,7 @@
         }
         
         .app-title {
-            color: #ff1744;
+            color: var(--accent-color);
             font-size: 1.8em;
             margin: 0;
             font-weight: 900;
@@ -95,7 +123,7 @@
         }
         
         .admin-title {
-            color: #ff1744;
+            color: var(--accent-color);
             font-size: 1.5em;
             margin-bottom: 20px;
             text-align: center;
@@ -154,8 +182,8 @@
         }
         
         .emoji-btn:hover, .emoji-btn.selected {
-            border-color: #ff6b9d;
-            background: #ffe0e6;
+            border-color: var(--primary-color);
+            background: var(--primary-light);
             transform: scale(1.1);
         }
         
@@ -189,7 +217,7 @@
             background: #f9f9f9;
             border-radius: 8px;
             margin-bottom: 10px;
-            border-left: 4px solid #ff6b9d;
+            border-left: 4px solid var(--primary-color);
         }
         
         .delete-btn {
@@ -397,8 +425,8 @@
         
         .task-icon {
             font-size: 36px;
-            color: #ff6b9d;
-            background: #fff0f4;
+            color: var(--primary-color);
+            background: var(--primary-light);
             padding: 10px;
             border-radius: 16px;
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
@@ -529,8 +557,8 @@
         
         .admin-icon {
             font-size: 24px;
-            color: #ff6b9d;
-            background: #fff0f4;
+            color: var(--primary-color);
+            background: var(--primary-light);
             padding: 6px;
             border-radius: 8px;
         }
@@ -577,7 +605,7 @@
         .afternoon::before { content: ''; width: 6px; height: 100%; position: absolute; left: 0; top: 0; background: #4caf50; }
         .evening::before { content: ''; width: 6px; height: 100%; position: absolute; left: 0; top: 0; background: #673ab7; }
         .anytime::before { content: ''; width: 6px; height: 100%; position: absolute; left: 0; top: 0; background: #e91e63; }
-        .custom::before { content: ''; width: 6px; height: 100%; position: absolute; left: 0; top: 0; background: #ff6b9d; }
+        .custom::before { content: ''; width: 6px; height: 100%; position: absolute; left: 0; top: 0; background: var(--primary-color); }
         
         .task-card, .task-item { position: relative; overflow: hidden; } /* required for the color marker */
         
@@ -599,9 +627,9 @@
             width: 100%;
             padding: 15px;
             background: rgba(255, 255, 255, 0.7);
-            border: 2px dashed #ff6b9d;
+            border: 2px dashed var(--primary-color);
             border-radius: 15px;
-            color: #c2185b;
+            color: var(--primary-dark);
             font-size: 1.1em;
             font-weight: bold;
             font-family: inherit;
@@ -753,7 +781,7 @@
 
         .achievement-progress-bar {
             height: 100%;
-            background: linear-gradient(90deg, #ff6b9d 0%, #ff8da1 100%);
+            background: linear-gradient(90deg, var(--primary-color) 0%, var(--primary-light) 100%);
             width: 0%;
             transition: width 0.3s ease;
         }
@@ -852,13 +880,23 @@
         <div id="adminPanel" class="hidden">
             <div class="admin-panel">
                 <h2 class="admin-title">👨‍👩‍👧 Parent Control Panel</h2>
+
+                <div class="settings-section" style="background: #f9f9f9; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                    <div style="font-weight: bold; color: var(--accent-color); font-size: 1.1em;">🎨 App Theme:</div>
+                    <select id="appThemeSelect" class="form-select" style="min-width: 200px;">
+                        <option value="ocean">🌊 Ocean (Blue)</option>
+                        <option value="dino">🦖 Dino (Green)</option>
+                        <option value="sunshine">☀️ Sunshine (Orange)</option>
+                        <option value="berry">🍓 Berry (Pink)</option>
+                    </select>
+                </div>
                 
                 <div class="today-review-section">
-                    <h3 style="color: #ff1744; margin-top: 0; margin-bottom: 10px;">📅 Today's Review</h3>
+                    <h3 style="color: var(--accent-color); margin-top: 0; margin-bottom: 10px;">📅 Today's Review</h3>
                     <div id="todayReviewContainer"></div>
                 </div>
                 
-                <h3 style="color: #ff1744; margin-bottom: 15px;" id="formTitle">➕ Add / Edit Task</h3>
+                <h3 style="color: var(--accent-color); margin-bottom: 15px;" id="formTitle">➕ Add / Edit Task</h3>
                 <div class="add-task-form">
                     <div class="form-row">
                         <input type="text" id="taskName" class="form-input" placeholder="Task name (e.g., Water plants)" maxlength="50">
@@ -918,9 +956,9 @@
                 </div>
                 
                 <div class="custom-tasks" id="customTasksList">
-                    <h3 style="color: #ff1744; margin-bottom: 15px;">📝 Core Routine Tasks:</h3>
+                    <h3 style="color: var(--accent-color); margin-bottom: 15px;">📝 Core Routine Tasks:</h3>
                     <div id="coreTasksContainer"></div>
-                    <h3 style="color: #ff1744; margin-top: 25px; margin-bottom: 15px;">✨ Custom Tasks: <span class="premium-badge">🔒 Premium</span></h3>
+                    <h3 style="color: var(--accent-color); margin-top: 25px; margin-bottom: 15px;">✨ Custom Tasks: <span class="premium-badge">🔒 Premium</span></h3>
                     <div id="customTasksContainer"></div>
                 </div>
             </div>
@@ -1040,7 +1078,7 @@
             completions: {}, // format: "YYYY-MM-DD": { "taskId": { completed: true, ... } }
             gamification: JSON.parse(JSON.stringify(defaultGamification)),
             subscription: { isPremium: false },
-            ui: { mode: 'child' }
+            ui: { mode: 'child', theme: 'ocean' }
         };
 
         // Migration map to replace legacy text emojis with premium Material Icons
@@ -1130,7 +1168,10 @@
                         ...parsed,
                         completions: loadedCompletions,
                         child: { ...appState.child, ...(parsed.child || {}) },
-                        ui: { ...appState.ui, ...(parsed.ui || {}) },
+                        ui: { 
+                            mode: parsed.ui?.mode || 'child', 
+                            theme: parsed.ui?.theme || 'ocean' 
+                        },
                         gamification: {
                             ...appState.gamification,
                             ...loadedGamification,
@@ -1189,6 +1230,23 @@
         let selectedEmoji = null;
 
         // --- RENDERING LOGIC --- //
+        function applyTheme() {
+            const theme = appState.ui.theme || 'ocean';
+            document.documentElement.setAttribute('data-theme', theme);
+            
+            const themeColors = {
+                'ocean': '#2196f3',
+                'berry': '#ff6b9d',
+                'dino': '#4caf50',
+                'sunshine': '#ff9800'
+            };
+            const metaTheme = document.querySelector('meta[name="theme-color"]');
+            if (metaTheme) metaTheme.setAttribute('content', themeColors[theme] || '#2196f3');
+            
+            const select = document.getElementById('appThemeSelect');
+            if (select) select.value = theme;
+        }
+
         function renderUI() {
             if (appState.ui.mode === 'child') {
                 childMode.classList.add('active');
@@ -1573,6 +1631,12 @@
                 showUpgradeModal();
             }
         }, true); // Use capture phase to intercept before parent toggles/buttons trigger
+
+        document.getElementById('appThemeSelect')?.addEventListener('change', (e) => {
+            appState.ui.theme = e.target.value;
+            saveState();
+            applyTheme();
+        });
 
         function setMode(mode) {
             appState.ui.mode = mode;
@@ -1979,11 +2043,19 @@
         // --- APP INITIALIZATION --- //
         function initApp() {
             loadState();
+            applyTheme();
             renderUI();
             renderApp();
         }
         
         initApp();
+
+        // --- PWA SERVICE WORKER REGISTRATION --- //
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js').catch(err => console.log('SW Registration failed: ', err));
+            });
+        }
     </script>
 </body>
 </html>
